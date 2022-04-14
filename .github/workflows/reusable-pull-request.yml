@@ -89,7 +89,7 @@ jobs:
           namespace: ${{ needs.context.outputs.namespace }}
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
-          operation: apply
+          operation: deploy
 ##
 ##  Example how to use private shared actions
 ##

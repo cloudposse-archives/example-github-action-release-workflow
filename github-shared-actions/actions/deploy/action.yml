@@ -40,4 +40,4 @@ runs:
   - shell: sh
     run: |
       sleep $((RANDOM % 10)) && \
-      echo "Deploy ${{ inputs.image }}:${{ inputs.image-tag }} to '${{ inputs.stack }}' stack with '${{ inputs.environment }}' settings in '${{ inputs.namespace }}' namespace"
+      echo "${{ inputs.operation }} ${{ inputs.image }}:${{ inputs.image-tag }} to '${{ inputs.stack }}' stack with '${{ inputs.environment }}' settings in '${{ inputs.namespace }}' namespace"
