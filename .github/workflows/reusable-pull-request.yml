@@ -54,7 +54,7 @@ jobs:
 
       - name: Build
         id: build
-        uses: ./github/actions/build
+        uses: ./github-shared-actions/actions/build
         with:
           organization: ${{ inputs.organization }}
           repository: ${{ inputs.repository }}
