@@ -136,10 +136,12 @@ jobs:
         with:
           labels: deploy
 
-      - uses: strumwolf/delete-deployment-environment@v2
+      - uses: bobheadxi/deployments@v1
         with:
+          step: deactivate-env
           token: ${{ github.token }}
-          environment: ${{ needs.context.outputs.namespace }}
+          env: ${{ needs.context.outputs.namespace }}
+          desc: Environment was pruned
 
 #      - uses: mondeja/remove-labels-gh-action@v1
 #        with:
