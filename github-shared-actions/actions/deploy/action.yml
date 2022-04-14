@@ -40,4 +40,14 @@ runs:
   - run: sh
     shell: |
       sleep $((RANDOM % 10)) && \
-      echo "Deploy ${{ inputs.image }}:${{ inputs.image-tag }} to ${{ inputs.stack }} with ${{ inputs.environment }} settings in ${{ inputs.namespace }} namespace"
+      echo "Deploy"
+    env:
+      STACK: ${{ inputs.stack }}
+      AWS_REGION: ${{ inputs.aws-region }}
+      ENVIRONMENT: ${{ inputs.environment }}
+      HELMFILE: ${{ inputs.helmfile }}
+      HELMFILE_PATH: ${{ inputs.helmfile-path }}
+      NAMESPACE: ${{ inputs.namespace }}
+      IMAGE: ${{ inputs.image }}
+      IMAGE_TAG: ${{ inputs.image-tag }}
+      OPERATION: ${{ inputs.operation }}
