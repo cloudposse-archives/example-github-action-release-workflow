@@ -67,7 +67,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: preview
+      name: ${{ needs.context.outputs.namespace }}
       url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ context, build ]
     if: ${{ ( github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}
@@ -102,7 +102,7 @@ jobs:
   destroy:
     runs-on: ubuntu-latest
     environment:
-      name: preview
+      name: ${{ needs.context.outputs.namespace }}
       url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ context ]
     if: ${{ ( github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'deploy')) || ( github.event.pull_request.state == 'open' && github.event.action == 'unlabeled' && github.event.label.name == 'deploy' ) }}
