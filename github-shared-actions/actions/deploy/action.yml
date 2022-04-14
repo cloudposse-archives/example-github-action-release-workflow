@@ -33,7 +33,10 @@ inputs:
   image-tag:
     description: Docker image tag
     required: true
-outputs: {}
+outputs:
+  webapp-url:
+    description: "Web Application url"
+    value: https://${{ inputs.namespace }}.example.com
 runs:
   using: "composite"
   steps:

@@ -38,8 +38,11 @@ jobs:
       image: ${{ inputs.registry }}/${{ inputs.repository }}
       tag: ${{ github.event.release.tag_name }}
 
-  deploy:
+  deploy_staging:
     runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ promote ]
     steps:
       - name: Checkout
@@ -53,9 +56,43 @@ jobs:
 #          path: github
 
       - name: Deploy
+        id: deploy
         uses: ./github-shared-actions/actions/deploy
         with:
-          stack: dev
+          stack: staging
+          environment:  staging
+          namespace: staging
+          image: ${{ needs.promote.outputs.image }}
+          image-tag: ${{ needs.promote.outputs.tag }}
+          operation: apply
+##
+##  Example how to use private shared actions
+##
+#          github-pat: ${{ secrets.github-pat }}
+
+
+  deploy_production:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.webapp-url }}
+    needs: [ promote ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      ##
+      ##  Example how to use private shared actions
+      ##
+      #        with:
+      #          repository: ${{ inputs.organization }}/github
+      #          token: ${{ secrets.github-pat }}
+      #          path: github
+
+      - name: Deploy
+        id: deploy
+        uses: ./github-shared-actions/actions/deploy
+        with:
+          stack: production
           environment:  production
           namespace: production
           image: ${{ needs.promote.outputs.image }}
