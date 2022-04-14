@@ -86,6 +86,7 @@ jobs:
 
       - name: Deploy
         uses: ./github-shared-actions/actions/deploy
+        id: deploy
         with:
           stack: dev
           environment:  preview
