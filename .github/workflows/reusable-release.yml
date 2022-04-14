@@ -53,7 +53,7 @@ jobs:
 #          path: github
 
       - name: Deploy
-        uses: ./github/actions/deploy
+        uses: ./github-shared-actions/actions/deploy
         with:
           stack: dev
           environment:  production
