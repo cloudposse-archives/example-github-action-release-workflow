@@ -37,8 +37,8 @@ outputs: {}
 runs:
   using: "composite"
   steps:
-  - run: sh
-    shell: |
+  - shell: sh
+    run: |
       sleep $((RANDOM % 10)) && \
       echo "Deploy"
     env:
