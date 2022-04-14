@@ -78,7 +78,6 @@ jobs:
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
           operation: apply
-          organization: ${{ inputs.organization }}
 ##
 ##  Example how to use private shared actions
 ##
