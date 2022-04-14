@@ -28,10 +28,12 @@ jobs:
   promote:
     runs-on: ubuntu-latest
     steps:
-      - uses: EuphoricSystems/docker-promote-image@1.0.0
-        with:
-          src: ${{ inputs.registry }}/${{ inputs.repository }}:sha-${{ github.sha }}
-          destinations: ${{ inputs.registry }}/${{ inputs.repository }}:${{ github.event.release.tag_name }}
+      - shell: sh
+        run: "Promote docker image ${{ inputs.registry }}/${{ inputs.repository }}:sha-${{ github.sha }} to ${{ inputs.registry }}/${{ inputs.repository }}:${{ github.event.release.tag_name }}"
+#      - uses: EuphoricSystems/docker-promote-image@1.0.0
+#        with:
+#          src: ${{ inputs.registry }}/${{ inputs.repository }}:sha-${{ github.sha }}
+#          destinations: ${{ inputs.registry }}/${{ inputs.repository }}:${{ github.event.release.tag_name }}
     outputs:
       image: ${{ inputs.registry }}/${{ inputs.repository }}
       tag: ${{ github.event.release.tag_name }}
