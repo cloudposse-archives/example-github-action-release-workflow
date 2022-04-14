@@ -54,6 +54,9 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: dev
+      url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ build ]
     steps:
       - name: Checkout

@@ -80,13 +80,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      ##
-      ##  Example how to use private shared actions
-      ##
-      #        with:
-      #          repository: ${{ inputs.organization }}/github
-      #          token: ${{ secrets.github-pat }}
-      #          path: github
+##
+##  Example how to use private shared actions
+##
+#        with:
+#          repository: ${{ inputs.organization }}/github
+#          token: ${{ secrets.github-pat }}
+#          path: github
 
       - name: Deploy
         id: deploy
