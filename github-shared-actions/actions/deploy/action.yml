@@ -41,5 +41,3 @@ runs:
     shell: |
       sleep $((RANDOM % 10)) && \
       echo "Deploy ${{ inputs.image }}:${{ inputs.image-tag }} to ${{ inputs.stack }} with ${{ inputs.environment }} settings in ${{ inputs.namespace }} namespace"
-#  env:
-#    OPERATION: ${{ inputs.operation }}

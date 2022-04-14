@@ -33,8 +33,7 @@ runs:
 
     - name: Build and push Docker images
       shell: sh
-      run: |
-        sleep $((RANDOM % 10)) && echo "Build docker image ${{ inputs.registry }}/${{ inputs.repository }}:${{ steps.context.outputs.tag }}"
+      run: sleep $((RANDOM % 10)) && echo "Build docker image ${{ inputs.registry }}/${{ inputs.repository }}:${{ steps.context.outputs.tag }}"
 
 #    - name: Build and push Docker images
 #      uses: docker/build-push-action@v2
