@@ -1,0 +1,45 @@
+name: 'Deploy helmfile EKS'
+description: 'Deploy on EKS with helmfile'
+inputs:
+  stack:
+    description: Stack name
+    required: true
+  aws-region:
+    description: AWS region
+    required: false
+    default: us-east-1
+  helmfile-path:
+    description: The path where lives the helmfile.
+    required: false
+    default: deploy
+  helmfile:
+    description: Helmfile name
+    required: false
+    default: helmfile.yaml
+  operation:
+    description: Operation with helmfiles. (valid options - `apply`, `destroy`)
+    required: true
+    default: apply
+  environment:
+    description: Helmfile environment
+    required: false
+    default: preview
+  namespace:
+    description: Kubernetes namespace
+    required: true
+  image:
+    description: Docker image
+    required: true
+  image-tag:
+    description: Docker image tag
+    required: true
+outputs: {}
+runs:
+  using: "composite"
+  steps:
+  - run: sh
+    shell: |
+      sleep $((RANDOM % 10)) && \
+      echo "Deploy ${{ inputs.image }}:${{ inputs.image-tag }} to ${{ inputs.stack }} with ${{ inputs.environment }} settings in ${{ inputs.namespace }} namespace"
+#  env:
+#    OPERATION: ${{ inputs.operation }}

@@ -1,0 +1,24 @@
+name: Pull Request
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run a multi-line script
+        run: |
+          echo '${{ toJSON(github.event) }}'
+
+  default:
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@master
+    needs: [prepare]
+    with:
+      organization: "${{ github.event.repository.owner.login }}"
+      repository: "${{ github.event.repository.name }}"
+##
+##  Example how to use private shared actions
+##
+#    secrets:
+#      github-pat: "${{ secrets.ADMIN_GITHUB_TOKEN }}"

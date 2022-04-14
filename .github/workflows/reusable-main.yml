@@ -1,0 +1,85 @@
+name: Reusable - Bleeding edge
+on:
+  workflow_call:
+    inputs:
+      organization:
+        required: true
+        type: string
+      repository:
+        required: true
+        type: string
+      registry:
+        description: "Docker registry"
+        required: false
+        type: string
+        default: registry.hub.docker.com
+##
+##  Example how to use private shared actions
+##
+#    secrets:
+#      github-pat:
+#        required: true
+
+env:
+  ORGANIZATION: ${{ inputs.organization }}
+  ACTION_REPO_NAME: ${{ inputs.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+##
+##  Example how to use private shared actions
+##
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#        with:
+#          repository: ${{ inputs.organization }}/github-shared-actions
+#          token: ${{ secrets.github-pat }}
+#          path: github-shared-actions
+
+      - name: Build
+        id: build
+        uses: ./github-shared-actions/actions/build
+        with:
+          organization: ${{ inputs.organization }}
+          repository: ${{ inputs.repository }}
+          registry: ${{ inputs.registry }}
+
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+      tag: ${{ steps.build.outputs.tag }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+##
+##  Example how to use private shared actions
+##
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#        with:
+#          repository: ${{ inputs.organization }}/github-shared-actions
+#          token: ${{ secrets.github-pat }}
+#          path: github-shared-actions
+
+      - name: Deploy
+        uses: ./github-shared-actions/actions/deploy
+        with:
+          stack: dev
+          environment: dev
+          namespace: dev
+          image: ${{ needs.build.outputs.image }}
+          image-tag: ${{ needs.build.outputs.tag }}
+          operation: apply
+          organization: ${{ inputs.organization }}
+##
+##  Example how to use private shared actions
+##
+#          github-pat: ${{ secrets.github-pat }}
