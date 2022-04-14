@@ -67,7 +67,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: preview
+      name: ${{ needs.context.outputs.namespace }}
       url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ context, build ]
     if: ${{ ( github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}
@@ -101,9 +101,6 @@ jobs:
 
   destroy:
     runs-on: ubuntu-latest
-    environment:
-      name: preview
-      url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ context ]
     if: ${{ ( github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'deploy')) || ( github.event.pull_request.state == 'open' && github.event.action == 'unlabeled' && github.event.label.name == 'deploy' ) }}
     steps:
@@ -134,6 +131,11 @@ jobs:
 ##  Example how to use private shared actions
 ##
 #          github-pat: ${{ secrets.github-pat }}
+
+      - uses: strumwolf/delete-deployment-environment@v2
+        with:
+          token: ${{ github.token }}
+          environment: ${{ needs.context.outputs.namespace }}
 
       - uses: peter-murray/remove-labels-action@v1
         with:
