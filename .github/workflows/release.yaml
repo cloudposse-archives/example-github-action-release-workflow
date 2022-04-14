@@ -11,7 +11,7 @@ jobs:
         run: |
           echo '${{ toJSON(github) }}'
   default:
-    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-release.yml@master
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-release.yml@main
     needs: [prepare]
     with:
       organization: "${{ github.event.repository.owner.login }}"

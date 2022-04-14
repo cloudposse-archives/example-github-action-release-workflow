@@ -12,7 +12,7 @@ jobs:
           echo '${{ toJSON(github.event) }}'
 
   default:
-    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@master
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@main
     needs: [prepare]
     with:
       organization: "${{ github.event.repository.owner.login }}"
