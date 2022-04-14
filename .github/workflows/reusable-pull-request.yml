@@ -138,7 +138,7 @@ jobs:
 
       - uses: bobheadxi/deployments@v1
         with:
-          step: deactivate-env
+          step: delete-env
           token: ${{ github.token }}
           env: ${{ needs.context.outputs.namespace }}
           desc: Environment was pruned
