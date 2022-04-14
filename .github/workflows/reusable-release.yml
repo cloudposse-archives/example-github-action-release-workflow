@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - shell: sh
-        run: "Promote docker image ${{ inputs.registry }}/${{ inputs.repository }}:sha-${{ github.sha }} to ${{ inputs.registry }}/${{ inputs.repository }}:${{ github.event.release.tag_name }}"
+        run: echo "Promote docker image ${{ inputs.registry }}/${{ inputs.repository }}:sha-${{ github.sha }} to ${{ inputs.registry }}/${{ inputs.repository }}:${{ github.event.release.tag_name }}"
 #      - uses: EuphoricSystems/docker-promote-image@1.0.0
 #        with:
 #          src: ${{ inputs.registry }}/${{ inputs.repository }}:sha-${{ github.sha }}
