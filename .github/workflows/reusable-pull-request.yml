@@ -132,14 +132,14 @@ jobs:
 ##
 #          github-pat: ${{ secrets.github-pat }}
 
+      - uses: peter-murray/remove-labels-action@v1
+        with:
+          labels: deploy
+
       - uses: strumwolf/delete-deployment-environment@v2
         with:
           token: ${{ github.token }}
           environment: ${{ needs.context.outputs.namespace }}
-
-      - uses: peter-murray/remove-labels-action@v1
-        with:
-          labels: deploy
 
 #      - uses: mondeja/remove-labels-gh-action@v1
 #        with:
