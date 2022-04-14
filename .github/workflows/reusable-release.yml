@@ -76,7 +76,7 @@ jobs:
     environment:
       name: production
       url: ${{ steps.deploy.outputs.webapp-url }}
-    needs: [ promote ]
+    needs: [ deploy_staging ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
