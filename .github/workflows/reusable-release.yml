@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: creating release branch
-        uses: satya-500/create-branch@v1.0
+        uses: satya-500/create-branch-from-specific-tag@v1.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
