@@ -74,11 +74,12 @@ jobs:
 #          token: ${{ secrets.github-pat }}
 #          path: github-shared-actions
 
-      - uses: strumwolf/delete-deployment-environment@v2
+      - uses: bobheadxi/deployments@v1
         with:
+          step: deactivate-env
           token: ${{ github.token }}
-          environment: hotfix
-          onlyDeactivateDeployments: true
+          env: hotfix
+          desc: Environment was pruned
 
       - name: Deploy
         uses: ./github-shared-actions/actions/deploy

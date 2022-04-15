@@ -116,6 +116,12 @@ jobs:
 #          repository: ${{ inputs.organization }}/github
 #          token: ${{ secrets.github-pat }}
 #          path: github-shared-actions
+      - uses: James-LeHa/Get_Deployment_ID@v1.5
+        id: deployment
+        with:
+          github-token: ${{ github.token }}
+          ref-to-search: ${{ github.head_ref }}
+          env-name: preview
 
       - name: Destroy
         uses: ./github-shared-actions/actions/deploy
@@ -136,13 +142,13 @@ jobs:
         with:
           labels: deploy
 
-      - uses: bobheadxi/deployments@v1
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
         with:
-          step: deactivate-env
           token: ${{ github.token }}
-          env: preview
-          desc: Environment was pruned
-          ref: ${{ github.head_ref }}
+          state: inactive
+          deployment_id: ${{ steps.deployment.outputs.deploymentId }}
 
 #      - uses: mondeja/remove-labels-gh-action@v1
 #        with:
