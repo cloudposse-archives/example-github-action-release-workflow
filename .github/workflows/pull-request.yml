@@ -5,12 +5,11 @@ on:
     types: [opened, synchronize, reopened, closed, labeled, unlabeled]
 
 jobs:
- prepare:
-   runs-on: ubuntu-latest
-   steps:
-     - name: Run a multi-line script
-       run: |
-         echo '${{ toJSON(github.event) }}'
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run a multi-line script
+      run: echo '${{ toJSON(github.event) }}'
 
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@main
