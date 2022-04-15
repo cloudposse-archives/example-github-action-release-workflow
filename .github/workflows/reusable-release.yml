@@ -37,7 +37,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           branch: release/${{ github.event.release.tag_name }}
-          tag: tags/${{ github.event.release.tag_name }}
+          from: tags/${{ github.event.release.tag_name }}
 
       - shell: sh
         run: echo "Promote docker image ${{ inputs.registry }}/${{ inputs.repository }}:sha-${{ github.sha }} to ${{ inputs.registry }}/${{ inputs.repository }}:${{ github.event.release.tag_name }}"
