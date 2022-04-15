@@ -26,7 +26,7 @@ env:
 
 jobs:
   create_branch:
-    runs-on: ubuntu-lates
+    runs-on: ubuntu-latest
     steps:
       - name: creating release branch
         uses: satya-500/create-branch@v1.0
