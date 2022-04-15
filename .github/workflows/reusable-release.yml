@@ -25,7 +25,7 @@ env:
   ACTION_REPO_NAME: ${{ inputs.repository }}
 
 jobs:
-  create_branch:
+  promote:
     runs-on: ubuntu-latest
     steps:
       - name: creating release branch
@@ -36,9 +36,6 @@ jobs:
           branch: release/${{ github.event.release.tag_name }}
           tag: tags/${{ github.event.release.tag_name }}
 
-  promote:
-    runs-on: ubuntu-latest
-    steps:
       - shell: sh
         run: echo "Promote docker image ${{ inputs.registry }}/${{ inputs.repository }}:sha-${{ github.sha }} to ${{ inputs.registry }}/${{ inputs.repository }}:${{ github.event.release.tag_name }}"
 #      - uses: EuphoricSystems/docker-promote-image@1.0.0
