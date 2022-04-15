@@ -144,7 +144,6 @@ jobs:
 
       - uses: avakar/set-deployment-status@v1
         with:
-          token: ${{ github.token }}
           state: inactive
           deployment_id: ${{ steps.deployment.outputs.deploymentId }}
 
