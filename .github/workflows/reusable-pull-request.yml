@@ -143,7 +143,7 @@ jobs:
         with:
           labels: deploy
 
-      - uses: chrnorm/deployment-status@v1
+      - uses: chrnorm/deployment-status@v1.0.0
         with:
           state: inactive
           token: ${{ github.token }}
