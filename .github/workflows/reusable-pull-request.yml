@@ -142,9 +142,7 @@ jobs:
         with:
           labels: deploy
 
-      - name: Update deployment status (success)
-        if: success()
-        uses: chrnorm/deployment-status@releases/v1
+      - uses: avakar/set-deployment-status@v1
         with:
           token: ${{ github.token }}
           state: inactive
