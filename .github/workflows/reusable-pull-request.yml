@@ -142,6 +142,7 @@ jobs:
           token: ${{ github.token }}
           env: preview
           desc: Environment was pruned
+          ref: ${{ github.head_ref }}
 
 #      - uses: mondeja/remove-labels-gh-action@v1
 #        with:
