@@ -143,7 +143,7 @@ jobs:
         with:
           labels: deploy
 
-      - uses: avakar/set-deployment-status@v1
+      - uses: chrnorm/deployment-status@v1
         with:
           state: inactive
           token: ${{ github.token }}
