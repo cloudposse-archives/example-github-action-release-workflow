@@ -116,11 +116,12 @@ jobs:
 #          repository: ${{ inputs.organization }}/github
 #          token: ${{ secrets.github-pat }}
 #          path: github-shared-actions
-      - uses: James-LeHa/Get_Deployment_ID@1.5
+
+      - uses: juniuszhangserai/getDeploymentById@v2.7
         id: deployment
         with:
           github-token: ${{ github.token }}
-          ref-to-search: ${{ github.event.pull_request.head.ref }}
+          ref-to-search: ${{ github.head_ref }}
           env-name: preview
 
       - name: Destroy
