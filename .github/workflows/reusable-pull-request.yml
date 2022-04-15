@@ -146,6 +146,7 @@ jobs:
       - uses: avakar/set-deployment-status@v1
         with:
           state: inactive
+          token: ${{ github.token }}
           deployment_id: ${{ steps.deployment.outputs.deploymentId }}
 
 #      - uses: mondeja/remove-labels-gh-action@v1
