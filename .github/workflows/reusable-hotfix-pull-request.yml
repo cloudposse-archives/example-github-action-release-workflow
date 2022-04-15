@@ -78,7 +78,7 @@ jobs:
         with:
           token: ${{ github.token }}
           environment: hotfix
-          onlyRemoveDeployments: true
+          onlyDeactivateDeployments: true
 
       - name: Deploy
         uses: ./github-shared-actions/actions/deploy
