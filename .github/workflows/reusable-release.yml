@@ -25,6 +25,17 @@ env:
   ACTION_REPO_NAME: ${{ inputs.repository }}
 
 jobs:
+  create_branch:
+    runs-on: ubuntu-lates
+    steps:
+      - name: creating release branch
+        uses: satya-500/create-branch@v1.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          branch: release/${{ github.event.release.tag_name }}
+          tag: tags/${{ github.event.release.tag_name }}
+
   promote:
     runs-on: ubuntu-latest
     steps:
