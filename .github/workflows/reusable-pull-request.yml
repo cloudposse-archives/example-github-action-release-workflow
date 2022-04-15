@@ -121,7 +121,7 @@ jobs:
         id: deployment
         with:
           github-token: ${{ github.token }}
-          ref-to-search: ${{ github.head_ref }}
+          ref-to-search: ${{ github.event.pull_request.head.sha }}
           env-name: preview
 
       - name: Destroy
