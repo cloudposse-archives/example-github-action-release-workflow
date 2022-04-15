@@ -113,6 +113,13 @@ jobs:
 #          token: ${{ secrets.github-pat }}
 #          path: github-shared-actions
 
+      - uses: juniuszhangserai/getDeploymentById@v2.7
+        id: deployment
+        with:
+          github-token: ${{ github.token }}
+          ref-to-search: ${{ github.event.pull_request.head.sha }}
+          env-name: hotfix
+
       - name: Destroy
         uses: ./github-shared-actions/actions/deploy
         id: deploy
@@ -132,14 +139,9 @@ jobs:
         with:
           labels: deploy
 
-      - uses: bobheadxi/deployments@v1
+      - uses: chrnorm/deployment-status@v1.0.0
+        if: steps.deployment.outputs.deploymentId != ''
         with:
-          step: deactivate-env
+          state: inactive
           token: ${{ github.token }}
-          env: hotfix
-          desc: Environment was pruned
-
-#      - uses: mondeja/remove-labels-gh-action@v1
-#        with:
-#          token: ${{ github.token }}
-#          labels: deploy
+          deployment_id: ${{ steps.deployment.outputs.deploymentId }}
