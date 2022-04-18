@@ -64,7 +64,7 @@ jobs:
         shell: sh
         run: |
           git pull
-          VERSION=$(git describe --tags --abbrev=0)
+          VERSION=$(git describe --always --tags --abbrev=0)
           echo "::set-output name=version::${VERSION}"
 
       - name: 'Get next minor version'
