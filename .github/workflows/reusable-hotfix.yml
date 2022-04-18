@@ -61,7 +61,7 @@ jobs:
 
       - name: 'Get Previous tag'
         id: previoustag
-        uses: actions/get-previous-release-action@v1
+        uses: actions/get-previous-release-action@v1.0.3
         env:
           GITHUB_TOKEN: "${{ github.token }}"
 
