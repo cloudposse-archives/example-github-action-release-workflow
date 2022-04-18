@@ -56,10 +56,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build ]
     steps:
-      - name: Create release
-        uses: K-Phoen/semver-release-action@v1.3.1
+      - name: GENERATE RELEASE NOTES
+        id: gen-notes
+        uses: rui-costa/action-auto-generate-release-notes@{latest}
+
+      - uses: rui-costa/action-automatic-semver-releases@1.1.0
         with:
-          release_branch: ${{ github.event.pull_request.head.ref }}
-          release_strategy: "release"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+          TOKEN: ${{ github.token }}
+          SEMVER: PATCH
+          NOTES: ${{ steps.gen-notes.outputs.notes }}
+
+#      - name: Increment Step Patch
+#        id: increment-semver-patch
+#        uses: Benbentwo/increment-semver@1.0.8
+#        with:
+#          version-level: '-p'
