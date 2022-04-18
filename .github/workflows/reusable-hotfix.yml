@@ -59,13 +59,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: rui-costa/action-automatic-semver-releases@1.1.0
+      - name: Increment Step Patch
+        id: increment-semver-patch
+        uses: Benbentwo/increment-semver@1.0.8
         with:
-          TOKEN: ${{ github.token }}
-          SEMVER: PATCH
+          version-level: '-p'
 
-#      - name: Increment Step Patch
-#        id: increment-semver-patch
-#        uses: Benbentwo/increment-semver@1.0.8
-#        with:
-#          version-level: '-p'
+      - uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.increment-semver-patch.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
