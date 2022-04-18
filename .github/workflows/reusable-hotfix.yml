@@ -52,37 +52,12 @@ jobs:
       image: ${{ steps.build.outputs.image }}
       tag: ${{ steps.build.outputs.tag }}
 
-  deploy:
+  release:
     runs-on: ubuntu-latest
-    environment:
-      name: dev
-      url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ build ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-##
-##  Example how to use private shared actions
-##
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#        with:
-#          repository: ${{ inputs.organization }}/github-shared-actions
-#          token: ${{ secrets.github-pat }}
-#          path: github-shared-actions
-
-      - name: Deploy
-        uses: ./github-shared-actions/actions/deploy
-        id: deploy
+      - name: Create release
+        uses: K-Phoen/semver-release-action@v1.3.1
         with:
-          stack: dev
-          environment: dev
-          namespace: dev
-          image: ${{ needs.build.outputs.image }}
-          image-tag: ${{ needs.build.outputs.tag }}
-          operation: apply
-##
-##  Example how to use private shared actions
-##
-#          github-pat: ${{ secrets.github-pat }}
+          release_branch: ${{ github.event.pull_request.head.ref }}
+          release_strategy: "release"
