@@ -61,19 +61,16 @@ jobs:
 
       - name: 'Get Previous tag'
         id: previoustag
-        uses: actions-ecosystem/action-get-latest-tag@v1
-        with:
-          semver_only: true
-          initial_version: 0.0.0
-          with_initial_version: true
-        env:
-          GITHUB_TOKEN: "${{ github.token }}"
+        shell: sh
+        run: |
+          VERSION=$(git describe --tags --abbrev=0)
+          echo "::set-output name=version::${VERSION}"
 
       - name: 'Get next minor version'
         id: semvers
         uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
-          version: ${{ steps.previoustag.outputs.tag }}
+          version: ${{ steps.previoustag.outputs.version }}
 
       - uses: ncipollo/release-action@v1
         with:
