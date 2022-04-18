@@ -80,4 +80,5 @@ jobs:
         with:
           tag: ${{ steps.semvers.outputs.patch }}
           commit: ${{ github.sha }}
+          generateReleaseNotes: true
           token: ${{ secrets.GITHUB_TOKEN }}
