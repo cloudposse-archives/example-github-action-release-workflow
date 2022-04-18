@@ -63,11 +63,8 @@ jobs:
         id: previoustag
         shell: sh
         run: |
-          git pull
-          git tag
-          git show
-          git describe --always --tags --abbrev=0
-          VERSION=$(git describe --always --tags --abbrev=0)
+          git describe --always --tags --abbrev=0  ${{ github.sha }}
+          VERSION=$(git describe --always --tags --abbrev=0  ${{ github.sha }})
           echo "::set-output name=version::${VERSION}"
 
       - name: 'Get next minor version'
