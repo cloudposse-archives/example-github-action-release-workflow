@@ -64,6 +64,8 @@ jobs:
         shell: sh
         run: |
           git pull
+          git tag
+          git show
           git describe --always --tags --abbrev=0
           VERSION=$(git describe --always --tags --abbrev=0)
           echo "::set-output name=version::${VERSION}"
