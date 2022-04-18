@@ -61,8 +61,7 @@ jobs:
 
       - name: 'Get Previous tag'
         id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-#        uses: actions/get-previous-release-action@v1
+        uses: actions/get-previous-release-action@v1
         env:
           GITHUB_TOKEN: "${{ github.token }}"
 
@@ -70,7 +69,7 @@ jobs:
         id: semvers
         uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
-          version: ${{ steps.previoustag.outputs.tag }}
+          version: ${{ steps.previoustag.outputs.release }}
 
       - uses: ncipollo/release-action@v1
         with:
