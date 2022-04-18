@@ -61,3 +61,5 @@ jobs:
         with:
           release_branch: ${{ github.event.pull_request.head.ref }}
           release_strategy: "release"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
