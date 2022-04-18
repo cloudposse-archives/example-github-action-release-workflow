@@ -61,7 +61,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 'Get Previous tag'
+      - name: Get Previous tag
         id: previoustag
         shell: sh
         run: |
@@ -70,7 +70,7 @@ jobs:
           VERSION=$(git describe --always --tags --abbrev=0  ${{ github.sha }})
           echo "::set-output name=version::${VERSION}"
 
-      - name: 'Get next minor version'
+      - name: Get next minor version
         id: semvers
         uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
@@ -112,13 +112,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      ##
-      ##  Example how to use private shared actions
-      ##
-      #        with:
-      #          repository: ${{ inputs.organization }}/github
-      #          token: ${{ secrets.github-pat }}
-      #          path: github
+##
+##  Example how to use private shared actions
+##
+#        with:
+#          repository: ${{ inputs.organization }}/github
+#          token: ${{ secrets.github-pat }}
+#          path: github
 
       - name: Deploy
         id: deploy
@@ -143,7 +143,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          
+
       - name: Create PR
         uses: devops-infra/action-pull-request@v0.4.2
         with:
