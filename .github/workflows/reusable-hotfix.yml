@@ -144,6 +144,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Get Previous tag
+        shell: sh
+        run: |
+          git fetch --tags --force
+          git describe --always --tags --abbrev=0 ${{ github.sha }}
+
       - name: Create PR
         uses: devops-infra/action-pull-request@v0.4.2
         with:
