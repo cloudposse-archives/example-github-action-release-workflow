@@ -78,7 +78,7 @@ jobs:
           tag: ${{ steps.semvers.outputs.patch }}
           commit: ${{ github.sha }}
           generateReleaseNotes: true
-          token: ${{ secrets.github-pat }}
+          token: ${{ github.token }}
 
     outputs:
       version: ${{ steps.semvers.outputs.patch }}
