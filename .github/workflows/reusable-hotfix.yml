@@ -78,7 +78,7 @@ jobs:
           tag: ${{ steps.semvers.outputs.patch }}
           commit: ${{ github.sha }}
           generateReleaseNotes: true
-          token: ${{ secrets.github-pat }}
+          token: ${{ github.token }}
 
     outputs:
       version: ${{ steps.semvers.outputs.patch }}
@@ -150,8 +150,8 @@ jobs:
       - name: Create PR
         uses: devops-infra/action-pull-request@v0.4.2
         with:
-          github_token: ${{ secret.github-pat }}
+          github_token: ${{ secrets.github-pat }}
           target_branch: main
           title: Reintegrate ${{ needs.release.outputs.version }} hotfix into main branch
-          get_diff: true
+          get_diff: false
 
