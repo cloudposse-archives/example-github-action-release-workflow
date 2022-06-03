@@ -154,5 +154,5 @@ jobs:
           target_branch: main
           title: Reintegrate ${{ needs.release.outputs.version }} hotfix into main branch
           template: .github/REINTEGRATE_PULL_REQUEST_TEMPLATE.md
-          get_diff: false
+          get_diff: true
 
