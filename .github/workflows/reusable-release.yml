@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Create Branch From Specific Tag
         uses: satya-500/create-branch-from-tag@v1.0
@@ -57,7 +57,7 @@ jobs:
     needs: [ promote ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 ##
 ##  Example how to use private shared actions
 ##
@@ -90,7 +90,7 @@ jobs:
     needs: [ deploy_staging ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 ##
 ##  Example how to use private shared actions
 ##
