@@ -13,12 +13,9 @@ on:
         required: false
         type: string
         default: registry.hub.docker.com
-##
-##  Example how to use private shared actions
-##
-#    secrets:
-#      github-pat:
-#        required: true
+    secrets:
+      github-pat:
+        required: true
 
 env:
   ORGANIZATION: ${{ inputs.organization }}
@@ -81,7 +78,7 @@ jobs:
           tag: ${{ steps.semvers.outputs.patch }}
           commit: ${{ github.sha }}
           generateReleaseNotes: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.github-pat }}
 
     outputs:
       version: ${{ steps.semvers.outputs.patch }}
@@ -153,7 +150,7 @@ jobs:
       - name: Create PR
         uses: devops-infra/action-pull-request@v0.4.2
         with:
-          github_token: ${{ github.token }}
+          github_token: ${{ secret.github-pat }}
           target_branch: main
           title: Reintegrate ${{ needs.release.outputs.version }} hotfix into main branch
           get_diff: true
