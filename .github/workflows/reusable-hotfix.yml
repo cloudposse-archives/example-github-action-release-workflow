@@ -150,7 +150,7 @@ jobs:
       - name: Create PR
         uses: devops-infra/action-pull-request@v0.4.2
         with:
-          github_token: ${{ secret.github-pat }}
+          github_token: ${{ secrets.github-pat }}
           target_branch: main
           title: Reintegrate ${{ needs.release.outputs.version }} hotfix into main branch
           get_diff: true
