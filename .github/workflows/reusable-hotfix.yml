@@ -153,5 +153,5 @@ jobs:
           github_token: ${{ secrets.github-pat }}
           target_branch: main
           title: Reintegrate ${{ needs.release.outputs.version }} hotfix into main branch
-          get_diff: true
+          get_diff: false
 
