@@ -4,15 +4,8 @@ on:
     types: [published]
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run a multi-line script
-        run: |
-          echo '${{ toJSON(github) }}'
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-release.yml@main
-    needs: [prepare]
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"

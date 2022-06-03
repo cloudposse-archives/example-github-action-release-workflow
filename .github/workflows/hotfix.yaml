@@ -4,15 +4,8 @@ on:
     branches: [ 'release/**' ]
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run a multi-line script
-        run: |
-          echo '${{ toJSON(github.event) }}'
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-hotfix.yml@main
-    needs: [prepare]
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"
