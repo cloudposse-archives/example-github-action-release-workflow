@@ -31,8 +31,12 @@ jobs:
       - id: context
         run: |
           echo "::set-output name=namespace::${{ github.event.pull_request.head.ref }}"
-          echo "::set-output name=build_enabled::${{  github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || ( github.event.action == 'labeled' && github.event.label.name == 'deploy' ) ) }}"
-          echo "::set-output name=deploy_enabled::${{ ( github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}"
+          PR_OPENED="${{ github.event.pull_request.state == 'open' }}"
+          PR_CLOSED="${{ github.event.pull_request.state == 'closed' }}"
+          EVENT_OPEN="${{ github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' }}"
+          EVENT_LABELED="${{ github.event.action == 'labeled' && github.event.label.name == 'deploy' }}"
+          echo "::set-output name=build_enabled::$( $PR_OPENED == 'true' && ( $EVENT_OPEN == 'true' || $EVENT_LABELED == 'true' ))"
+          echo "::set-output name=deploy_enabled::${{ (  github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}"
           echo "::set-output name=destroy_enabled::${{ ( github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'deploy')) || ( github.event.pull_request.state == 'open' && github.event.action == 'unlabeled' && github.event.label.name == 'deploy' ) }}"
         shell: bash
     outputs:
