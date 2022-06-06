@@ -35,7 +35,7 @@ jobs:
           PR_CLOSED="${{ github.event.pull_request.state == 'closed' }}"
           EVENT_OPEN="${{ github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' }}"
           EVENT_LABELED="${{ github.event.action == 'labeled' && github.event.label.name == 'deploy' }}"
-          BUILD_ENABLED="$( $PR_OPENED == 'true' && ( $EVENT_OPEN == 'true' || $EVENT_LABELED == 'true' ))"
+          BUILD_ENABLED=[ ${PR_OPENED} == 'true' && [ ${EVENT_OPEN} == 'true' || ${EVENT_LABELED} == 'true' ]]
           echo "name=build_enabled::${BUILD_ENABLED}"
           echo "::set-output name=build_enabled::${BUILD_ENABLED}"
           echo "::set-output name=deploy_enabled::${{ (  github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}"
