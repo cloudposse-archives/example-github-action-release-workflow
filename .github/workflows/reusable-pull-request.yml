@@ -79,7 +79,7 @@ jobs:
     environment:
       name: ${{ matrix.env }}
       url: ${{ steps.deploy.outputs.webapp-url }}
-    needs: [ build ]
+    needs: [ context, build ]
     if: ${{ needs.context.outputs.deploy_enabled == 'true' }}
     steps:
       - name: Checkout
