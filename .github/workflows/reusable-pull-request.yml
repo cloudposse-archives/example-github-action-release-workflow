@@ -80,7 +80,7 @@ jobs:
       name: ${{ matrix.env }}
       url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ build ]
-    if: ${{ needs.context.outputs.deploy_enabled == 'true' && contains(github.event.pull_request.labels.*.name, matrix.env) }}
+    if: ${{ needs.context.outputs.deploy_enabled == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -99,7 +99,7 @@ jobs:
         id: deploy
         with:
           stack: dev
-          environment:  preview
+          environment: preview
           namespace: ${{ needs.context.outputs.namespace }}
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
