@@ -73,10 +73,13 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: ["preview", "qa1", "qa2", "qa3", "qa4"]
     environment:
-      name: preview
+      name: ${{ matrix.env }}
       url: ${{ steps.deploy.outputs.webapp-url }}
-    needs: [ build ]
+    needs: [ context, build ]
     if: ${{ needs.context.outputs.deploy_enabled == 'true' }}
     steps:
       - name: Checkout
@@ -96,7 +99,7 @@ jobs:
         id: deploy
         with:
           stack: dev
-          environment:  preview
+          environment: preview
           namespace: ${{ needs.context.outputs.namespace }}
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
@@ -108,6 +111,9 @@ jobs:
 
   destroy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: ["preview", "qa1", "qa2", "qa3", "qa4"]
     needs: [ context ]
     if: ${{ needs.context.outputs.destroy_enabled == 'true' }}
     steps:
