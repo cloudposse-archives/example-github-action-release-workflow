@@ -99,7 +99,7 @@ jobs:
         id: deploy
         with:
           stack: dev
-          environment: preview
+          environment: ${{ matrix.env }}
           namespace: ${{ needs.context.outputs.namespace }}
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
