@@ -13,6 +13,14 @@ on:
         required: false
         type: string
         default: registry.hub.docker.com
+      destroy:
+        required: true
+        type: boolean
+        default: false
+      labels:
+        required: true
+        type: strging
+
 ##
 ##  Example how to use private shared actions
 ##
@@ -135,14 +143,14 @@ jobs:
         with:
           github-token: ${{ github.token }}
           ref-to-search: ${{ github.event.pull_request.head.sha }}
-          env-name: preview
+          env-name: ${{ matrix.env }}
 
       - name: Destroy
         uses: ./github-shared-actions/actions/deploy
         id: deploy
         with:
           stack: dev
-          environment:  preview
+          environment:  ${{ matrix.env }}
           namespace: ${{ needs.context.outputs.namespace }}
           image: "<none>"
           image-tag: "<none>"
