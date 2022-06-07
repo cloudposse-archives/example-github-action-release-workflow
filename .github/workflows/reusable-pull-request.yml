@@ -73,6 +73,9 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: ["preview", "qa1", "qa2", "qa3", "qa4"]
     environment:
       name: preview
       url: ${{ steps.deploy.outputs.webapp-url }}
@@ -108,6 +111,9 @@ jobs:
 
   destroy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: ["preview", "qa1", "qa2", "qa3", "qa4"]
     needs: [ context ]
     if: ${{ needs.context.outputs.destroy_enabled == 'true' }}
     steps:
