@@ -5,11 +5,53 @@ on:
     types: [opened, synchronize, reopened, closed, labeled, unlabeled]
 
 jobs:
-  default:
+  build:
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-build.yml@main
+    with:
+      enabled: ${{ github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || ( github.event.action == 'labeled' && github.event.label.name == 'deploy' ) ) }}
+      organization: "${{ github.event.repository.owner.login }}"
+      repository: "${{ github.event.repository.name }}"
+
+  preview:
+    needs: [build]
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@main
     with:
       organization: "${{ github.event.repository.owner.login }}"
-      repository: "${{ github.event.repository.name }}"
+      image: "${{ needs.build.outputs.image }}"
+      tag: "${{ needs.build.outputs.tag }}"
+
+  qa1:
+    needs: [build]
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@main
+    with:
+      organization: "${{ github.event.repository.owner.login }}"
+      image: "${{ needs.build.outputs.image }}"
+      tag: "${{ needs.build.outputs.tag }}"
+
+  qa2:
+    needs: [build]
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@main
+    with:
+      organization: "${{ github.event.repository.owner.login }}"
+      image: "${{ needs.build.outputs.image }}"
+      tag: "${{ needs.build.outputs.tag }}"
+
+  qa3:
+    needs: [build]
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@main
+    with:
+      organization: "${{ github.event.repository.owner.login }}"
+      image: "${{ needs.build.outputs.image }}"
+      tag: "${{ needs.build.outputs.tag }}"
+
+  qa4:
+    needs: [build]
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@main
+    with:
+      organization: "${{ github.event.repository.owner.login }}"
+      image: "${{ needs.build.outputs.image }}"
+      tag: "${{ needs.build.outputs.tag }}"
+
 ##
 ##  Example how to use private shared actions
 ##

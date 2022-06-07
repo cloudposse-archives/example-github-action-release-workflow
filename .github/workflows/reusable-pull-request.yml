@@ -5,14 +5,19 @@ on:
       organization:
         required: true
         type: string
-      repository:
-        required: true
-        type: string
       registry:
         description: "Docker registry"
         required: false
         type: string
         default: registry.hub.docker.com
+      image:
+        description: Docker image
+        type: string
+        required: true
+      image-tag:
+        description: Docker image tag
+        type: string
+        required: true
 ##
 ##  Example how to use private shared actions
 ##
@@ -31,52 +36,20 @@ jobs:
       - id: context
         run: |
           echo "::set-output name=namespace::${{ github.event.pull_request.head.ref }}"
-          echo "::set-output name=build_enabled::${{     github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || ( github.event.action == 'labeled' && github.event.label.name == 'deploy' ) ) }}"
           echo "::set-output name=deploy_enabled::${{ (  github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}"
           echo "::set-output name=destroy_enabled::${{ ( github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'deploy')) || ( github.event.pull_request.state == 'open' && github.event.action == 'unlabeled' && github.event.label.name == 'deploy' ) }}"
         shell: bash
     outputs:
       namespace: ${{ steps.context.outputs.namespace }}
-      build_enabled: ${{ steps.context.outputs.build_enabled }}
       deploy_enabled: ${{ steps.context.outputs.deploy_enabled }}
       destroy_enabled: ${{ steps.context.outputs.destroy_enabled }}
 
-  build:
-    runs-on: ubuntu-latest
-    needs: [ context ]
-    if: ${{ needs.context.outputs.build_enabled == 'true' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-##
-##  Example how to use private shared actions
-##
-#      - name: Checkout private actions
-#        uses: actions/checkout@v2
-#        with:
-#          repository: ${{ inputs.organization }}/github
-#          token: ${{ secrets.github-pat }}
-#          path: github
-
-      - name: Build
-        id: build
-        uses: ./github-shared-actions/actions/build
-        with:
-          organization: ${{ inputs.organization }}
-          repository: ${{ inputs.repository }}
-          registry: ${{ inputs.registry }}
-
-    outputs:
-      image: ${{ steps.build.outputs.image }}
-      tag: ${{ steps.build.outputs.tag }}
-
   deploy:
     runs-on: ubuntu-latest
+    needs: [ context ]
     environment:
       name: preview
       url: ${{ steps.deploy.outputs.webapp-url }}
-    needs: [ build ]
     if: ${{ needs.context.outputs.deploy_enabled == 'true' }}
     steps:
       - name: Checkout
@@ -98,8 +71,8 @@ jobs:
           stack: dev
           environment:  preview
           namespace: ${{ needs.context.outputs.namespace }}
-          image: ${{ needs.build.outputs.image }}
-          image-tag: ${{ needs.build.outputs.tag }}
+          image: ${{ inputs.image }}
+          image-tag: ${{ inputs.tag }}
           operation: deploy
 ##
 ##  Example how to use private shared actions
