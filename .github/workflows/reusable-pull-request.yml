@@ -19,7 +19,7 @@ on:
         default: false
       labels:
         required: true
-        type: strging
+        type: string
 
 ##
 ##  Example how to use private shared actions
