@@ -18,7 +18,7 @@ jobs:
     with:
       organization: "${{ github.event.repository.owner.login }}"
       image: "${{ needs.build.outputs.image }}"
-      tag: "${{ needs.build.outputs.tag }}"
+      image-tag: "${{ needs.build.outputs.tag }}"
 
   qa1:
     needs: [build]
@@ -26,7 +26,7 @@ jobs:
     with:
       organization: "${{ github.event.repository.owner.login }}"
       image: "${{ needs.build.outputs.image }}"
-      tag: "${{ needs.build.outputs.tag }}"
+      image-tag: "${{ needs.build.outputs.tag }}"
 
   qa2:
     needs: [build]
@@ -34,7 +34,7 @@ jobs:
     with:
       organization: "${{ github.event.repository.owner.login }}"
       image: "${{ needs.build.outputs.image }}"
-      tag: "${{ needs.build.outputs.tag }}"
+      image-tag: "${{ needs.build.outputs.tag }}"
 
   qa3:
     needs: [build]
@@ -42,7 +42,7 @@ jobs:
     with:
       organization: "${{ github.event.repository.owner.login }}"
       image: "${{ needs.build.outputs.image }}"
-      tag: "${{ needs.build.outputs.tag }}"
+      image-tag: "${{ needs.build.outputs.tag }}"
 
   qa4:
     needs: [build]
@@ -50,7 +50,7 @@ jobs:
     with:
       organization: "${{ github.event.repository.owner.login }}"
       image: "${{ needs.build.outputs.image }}"
-      tag: "${{ needs.build.outputs.tag }}"
+      image-tag: "${{ needs.build.outputs.tag }}"
 
 ##
 ##  Example how to use private shared actions
