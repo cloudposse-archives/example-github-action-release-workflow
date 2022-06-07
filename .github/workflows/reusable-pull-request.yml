@@ -77,7 +77,7 @@ jobs:
       matrix:
         env: ["preview", "qa1", "qa2", "qa3", "qa4"]
     environment:
-      name: preview
+      name: ${{ matrix.env }}
       url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ build ]
     if: ${{ needs.context.outputs.deploy_enabled == 'true' }}
