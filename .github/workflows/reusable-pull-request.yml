@@ -80,7 +80,7 @@ jobs:
       name: ${{ matrix.env }}
       url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ build ]
-    if: ${{ needs.context.outputs.deploy_enabled == 'true' && contains(github.event.pull_request.labels.*.name, ${{ matrix.env }}) }}
+    if: ${{ needs.context.outputs.deploy_enabled == 'true' && contains(github.event.pull_request.labels.*.name, matrix.env) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
