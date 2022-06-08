@@ -114,11 +114,10 @@ jobs:
           script: ${{ format('.{0}', matrix.env) }}
       - id: context
         run: |
-          echo "${{ needs.context.outputs.labels }}"
           echo "${{ matrix.env }}"
           echo "${{ needs.context.outputs.labels_env }}"          
           echo ${{ steps.label.outputs.output }}
-          echo "${{ contains(needs.context.outputs.labels, needs.context.outputs.labels_env[matrix.env]) }}"
+          echo "${{ contains(toJson(inputs.labels), needs.context.outputs.labels_env[matrix.env]) }}"
         shell: bash
 
       - name: Checkout
@@ -137,7 +136,7 @@ jobs:
       - name: Deploy
         uses: ./github-shared-actions/actions/deploy
         id: deploy
-        if: ${{ contains(toJson(inputs.labels), needs.context.outputs.labels_env[matrix.env]) }}
+        if: ${{ contains(needs.context.outputs.labels, needs.context.outputs.labels_env[matrix.env]) }}
         with:
           stack: dev
           environment: ${{ matrix.env }}
