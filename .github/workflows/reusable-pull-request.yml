@@ -115,17 +115,9 @@ jobs:
         with:
           input: ${{ needs.context.outputs.labels_env }}
           script: ${{ format('.{0}', matrix.env) }}
-      - id: context
-        run: |
-          echo "${{ needs.context.outputs.labels }}"
-          echo "${{ matrix.env }}"
-          echo "${{ needs.context.outputs.labels_env }}"          
-          echo ${{ steps.label.outputs.output }}
-          echo "${{ contains(needs.context.outputs.labels, steps.label.outputs.output) }}"
-        shell: bash
 
       - name: Checkout
-        if: ${{ contains(needs.context.outputs.labels, needs.context.outputs.labels_env[matrix.env]) }}
+        if: ${{ contains(needs.context.outputs.labels, steps.label.outputs.output) }}
         uses: actions/checkout@v3
 ##
 ##  Example how to use private shared actions
@@ -140,7 +132,7 @@ jobs:
       - name: Deploy
         uses: ./github-shared-actions/actions/deploy
         id: deploy
-        if: ${{ contains(needs.context.outputs.labels, needs.context.outputs.labels_env[matrix.env]) }}
+        if: ${{ contains(needs.context.outputs.labels, steps.label.outputs.output) }}
         with:
           stack: dev
           environment: ${{ matrix.env }}
