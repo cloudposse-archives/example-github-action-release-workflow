@@ -111,8 +111,10 @@ jobs:
       - uses: edwardgeorge/jq-action@main
         id: label
         with:
-          input: ${{ needs.context.outputs.labels_env }}
-          script: ".preview"
+          input: "[{\"num\": 1}, {\"num\": 2}]"
+          script: "[.[] | select(.num == 1) | .num]"
+#          input: ${{ needs.context.outputs.labels_env }}
+#          script: ".preview"
       - id: context
         run: |
           echo "${{ needs.context.outputs.labels }}"
