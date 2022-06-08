@@ -167,7 +167,7 @@ jobs:
         shell: bash
 
       - name: Checkout
-        if: ${{ steps.context.outputs.need_purge && steps.context.outputs.deployment_exits }}
+        if: ${{ steps.context.outputs.need_purge == 'true' && steps.context.outputs.deployment_exits == 'true' }}
         uses: actions/checkout@v3
 
 ##
@@ -182,7 +182,7 @@ jobs:
 
       - name: Destroy
         uses: ./github-shared-actions/actions/deploy
-        if: ${{ steps.context.outputs.need_purge && steps.context.outputs.deployment_exits }}
+        if: ${{ steps.context.outputs.need_purge == 'true' && steps.context.outputs.deployment_exits == 'true' }}
         id: deploy
         with:
           stack: dev
@@ -197,12 +197,12 @@ jobs:
 #          github-pat: ${{ secrets.github-pat }}
 
       - uses: peter-murray/remove-labels-action@v1
-        if: ${{ steps.context.outputs.closed }}
+        if: ${{ steps.context.outputs.closed == 'true' }}
         with:
           labels: ${{ steps.label.outputs.output }}
 
       - uses: chrnorm/deployment-status@v2.0.0
-        if: ${{ steps.context.outputs.need_purge && steps.context.outputs.deployment_exits }}
+        if: ${{ steps.context.outputs.need_purge == 'true' && steps.context.outputs.deployment_exits == 'true' }}
         with:
           state: inactive
           token: ${{ github.token }}
