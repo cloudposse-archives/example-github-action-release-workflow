@@ -54,15 +54,14 @@ jobs:
             deploy/qa2: qa2
             deploy/qa3: qa3
             deploy/qa4: qa4
-
       - uses: fabasoad/yaml-json-xml-converter-action@main
         id: yaml2json
         with:
           path: 'labels_env.yaml'
           from: 'yaml'
           to: 'json'
-        - name: Print yaml2json result
-          run: echo "${{ steps.yaml2json.outputs.data }}"
+      - name: Print yaml2json result
+        run: echo "${{ steps.yaml2json.outputs.data }}"
     outputs:
       namespace: ${{ steps.context.outputs.namespace }}
       build_enabled: ${{ steps.context.outputs.build_enabled }}
