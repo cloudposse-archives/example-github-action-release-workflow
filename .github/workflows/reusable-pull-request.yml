@@ -49,11 +49,11 @@ jobs:
           path: './'
           file: 'labels_env.yaml'
           content: |
-            "deploy": "preview",
-            "deploy/qa1": "qa1",
-            "deploy/qa2": "qa2",
-            "deploy/qa3": "qa3",
-            "deploy/qa4": "qa4",          
+            deploy: preview
+            deploy/qa1: qa1
+            deploy/qa2: qa2
+            deploy/qa3: qa3
+            deploy/qa4: qa4
 
       - uses: fabasoad/yaml-json-xml-converter-action@main
         id: yaml2json
