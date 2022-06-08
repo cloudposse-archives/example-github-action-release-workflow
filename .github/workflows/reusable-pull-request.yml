@@ -112,6 +112,7 @@ jobs:
         run: |
           echo "${{ needs.context.outputs.labels }}"
           echo "${{ matrix.env }}"
+          echo "${{ needs.context.outputs.labels_env }}"          
           echo "${{ needs.context.outputs.labels_env[matrix.env] }}"
           echo "${{ contains(needs.context.outputs.labels, needs.context.outputs.labels_env[matrix.env]) }}"
         shell: bash
