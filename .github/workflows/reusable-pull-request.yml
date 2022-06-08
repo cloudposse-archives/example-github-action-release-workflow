@@ -117,7 +117,7 @@ jobs:
           echo "${{ matrix.env }}"
           echo "${{ needs.context.outputs.labels_env }}"          
           echo ${{ steps.label.outputs.output }}
-          echo "${{ contains(toJson(inputs.labels), needs.context.outputs.labels_env[matrix.env]) }}"
+          echo "${{ contains(toJson(inputs.labels), steps.label.outputs.output) }}"
         shell: bash
 
       - name: Checkout
