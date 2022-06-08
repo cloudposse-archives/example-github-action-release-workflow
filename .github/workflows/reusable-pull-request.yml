@@ -65,7 +65,7 @@ jobs:
       build_enabled: ${{ steps.context.outputs.build_enabled }}
       deploy_enabled: ${{ steps.context.outputs.deploy_enabled }}
       destroy_enabled: ${{ steps.context.outputs.destroy_enabled }}
-      labels_env: ${{ toJson(steps.yaml2json.outputs.data) }}
+      labels_env: ${{ steps.yaml2json.outputs.data }}
       labels: ${{ toJson(inputs.labels) }}
 
   build:
