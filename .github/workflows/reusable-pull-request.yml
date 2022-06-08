@@ -108,6 +108,14 @@ jobs:
       url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ context, build ]
     steps:
+      - id: context
+        run: |
+          echo "${{ needs.context.outputs.labels }}"
+          echo "${{ matrix.env }}"
+          echo "${{ needs.context.outputs.labels_env[matrix.env] }}"
+          echo "${{ contains(needs.context.outputs.labels, needs.context.outputs.labels_env[matrix.env]) }}"
+        shell: bash
+
       - name: Checkout
         if: ${{ contains(needs.context.outputs.labels, needs.context.outputs.labels_env[matrix.env]) }}
         uses: actions/checkout@v3
