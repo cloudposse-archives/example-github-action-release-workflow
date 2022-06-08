@@ -13,10 +13,10 @@ on:
         required: false
         type: string
         default: registry.hub.docker.com
-      destroy:
+      open:
         required: true
         type: boolean
-        default: false
+        default: true
       labels:
         required: true
         type: string
@@ -39,21 +39,34 @@ jobs:
       - id: context
         run: |
           echo "::set-output name=namespace::${{ github.event.pull_request.head.ref }}"
-          echo "::set-output name=labels::${{ inputs.labels }}"
-          echo "::set-output name=build_enabled::${{     github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || ( github.event.action == 'labeled' && github.event.label.name == 'deploy' ) ) }}"
-          echo "::set-output name=deploy_enabled::${{ (  github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}"
-          echo "::set-output name=destroy_enabled::${{ ( github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'deploy')) || ( github.event.pull_request.state == 'open' && github.event.action == 'unlabeled' && github.event.label.name == 'deploy' ) }}"
         shell: bash
+
+      - uses: 1arp/create-a-file-action@0.2
+        with:
+          path: './'
+          file: 'labels_env.yaml'
+          content: |
+            preview: deploy
+            qa1: deploy/qa1
+            qa2: deploy/qa2
+            qa3: deploy/qa3
+            qa4: deploy/qa4
+
+      - uses: fabasoad/yaml-json-xml-converter-action@main
+        id: yaml2json
+        with:
+          path: 'labels_env.yaml'
+          from: 'yaml'
+          to: 'json'
     outputs:
       namespace: ${{ steps.context.outputs.namespace }}
-      build_enabled: ${{ steps.context.outputs.build_enabled }}
-      deploy_enabled: ${{ steps.context.outputs.deploy_enabled }}
-      destroy_enabled: ${{ steps.context.outputs.destroy_enabled }}
+      labels_env: ${{ steps.yaml2json.outputs.data }}
+      labels: ${{ inputs.labels }}
 
   build:
     runs-on: ubuntu-latest
     needs: [ context ]
-    if: ${{ needs.context.outputs.build_enabled == 'true' }}
+    if: ${{ inputs.open }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -82,6 +95,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ inputs.open }}
     strategy:
       matrix:
         env: ["preview", "qa1", "qa2", "qa3", "qa4"]
@@ -89,9 +103,15 @@ jobs:
       name: ${{ matrix.env }}
       url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ context, build ]
-    if: ${{ needs.context.outputs.deploy_enabled == 'true' }}
     steps:
+      - uses: edwardgeorge/jq-action@main
+        id: label
+        with:
+          input: ${{ needs.context.outputs.labels_env }}
+          script: ${{ format('.{0}', matrix.env) }}
+
       - name: Checkout
+        if: ${{ contains(needs.context.outputs.labels, steps.label.outputs.output) }}
         uses: actions/checkout@v3
 ##
 ##  Example how to use private shared actions
@@ -106,6 +126,7 @@ jobs:
       - name: Deploy
         uses: ./github-shared-actions/actions/deploy
         id: deploy
+        if: ${{ contains(needs.context.outputs.labels, steps.label.outputs.output) }}
         with:
           stack: dev
           environment: ${{ matrix.env }}
@@ -124,9 +145,29 @@ jobs:
       matrix:
         env: ["preview", "qa1", "qa2", "qa3", "qa4"]
     needs: [ context ]
-    if: ${{ needs.context.outputs.destroy_enabled == 'true' }}
     steps:
+      - uses: edwardgeorge/jq-action@main
+        id: label
+        with:
+          input: ${{ needs.context.outputs.labels_env }}
+          script: ${{ format('.{0}', matrix.env) }}
+
+      - uses: juniuszhangserai/getDeploymentById@v2.7
+        id: deployment
+        with:
+          github-token: ${{ github.token }}
+          ref-to-search: ${{ github.event.pull_request.head.sha }}
+          env-name: ${{ matrix.env }}
+
+      - id: context
+        run: |
+          echo "::set-output name=closed::${{ ! inputs.open }}"
+          echo "::set-output name=need_purge::${{ ! inputs.open || ! contains(needs.context.outputs.labels, steps.label.outputs.output) }}"
+          echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deploymentId != '' }}"
+        shell: bash
+
       - name: Checkout
+        if: ${{ steps.context.outputs.need_purge && steps.context.outputs.deployment_exits }}
         uses: actions/checkout@v3
 
 ##
@@ -139,15 +180,9 @@ jobs:
 #          token: ${{ secrets.github-pat }}
 #          path: github-shared-actions
 
-      - uses: juniuszhangserai/getDeploymentById@v2.7
-        id: deployment
-        with:
-          github-token: ${{ github.token }}
-          ref-to-search: ${{ github.event.pull_request.head.sha }}
-          env-name: ${{ matrix.env }}
-
       - name: Destroy
         uses: ./github-shared-actions/actions/deploy
+        if: ${{ steps.context.outputs.need_purge && steps.context.outputs.deployment_exits }}
         id: deploy
         with:
           stack: dev
@@ -162,11 +197,12 @@ jobs:
 #          github-pat: ${{ secrets.github-pat }}
 
       - uses: peter-murray/remove-labels-action@v1
+        if: ${{ steps.context.outputs.closed }}
         with:
-          labels: deploy
+          labels: ${{ steps.label.outputs.output }}
 
       - uses: chrnorm/deployment-status@v2.0.0
-        if: steps.deployment.outputs.deploymentId != ''
+        if: ${{ steps.context.outputs.need_purge && steps.context.outputs.deployment_exits }}
         with:
           state: inactive
           token: ${{ github.token }}
