@@ -108,12 +108,17 @@ jobs:
       url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ context, build ]
     steps:
+      - uses: edwardgeorge/jq-action@main
+        id: label
+        with:
+          input: ${{ needs.context.outputs.labels_env }}
+          script: ${{ format(".[{0}]", matrix.env) }}
       - id: context
         run: |
           echo "${{ needs.context.outputs.labels }}"
           echo "${{ matrix.env }}"
           echo "${{ needs.context.outputs.labels_env }}"          
-          echo "${{ needs.context.outputs.labels_env[matrix.env] }}"
+          echo "${{ steps.label.outputs.output }}"
           echo "${{ contains(needs.context.outputs.labels, needs.context.outputs.labels_env[matrix.env]) }}"
         shell: bash
 
