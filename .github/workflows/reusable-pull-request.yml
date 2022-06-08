@@ -112,13 +112,13 @@ jobs:
         id: label
         with:
           input: ${{ needs.context.outputs.labels_env }}
-          script: "."
+          script: .["preview"]
       - id: context
         run: |
           echo "${{ needs.context.outputs.labels }}"
           echo "${{ matrix.env }}"
           echo "${{ needs.context.outputs.labels_env }}"          
-          echo "${{ steps.label.outputs.output }}"
+          echo ${{ steps.label.outputs.output }}
           echo "${{ contains(needs.context.outputs.labels, needs.context.outputs.labels_env[matrix.env]) }}"
         shell: bash
 
