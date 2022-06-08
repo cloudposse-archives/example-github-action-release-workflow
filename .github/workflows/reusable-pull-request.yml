@@ -66,6 +66,7 @@ jobs:
       deploy_enabled: ${{ steps.context.outputs.deploy_enabled }}
       destroy_enabled: ${{ steps.context.outputs.destroy_enabled }}
       labels_env: ${{ steps.yaml2json.outputs.data }}
+      labels: ${{ toJson(inputs.labels) }}
 
   build:
     runs-on: ubuntu-latest
@@ -114,10 +115,11 @@ jobs:
           script: ${{ format('.{0}', matrix.env) }}
       - id: context
         run: |
+          echo "${{ needs.context.outputs.labels }}"
           echo "${{ matrix.env }}"
           echo "${{ needs.context.outputs.labels_env }}"          
           echo ${{ steps.label.outputs.output }}
-          echo "${{ contains(toJson(inputs.labels), steps.label.outputs.output) }}"
+          echo "${{ contains(needs.context.outputs.labels, steps.label.outputs.output) }}"
         shell: bash
 
       - name: Checkout
