@@ -113,7 +113,7 @@ jobs:
         with:
           input: "{\"preview\": \"test\"}"
 #          input: ${{ needs.context.outputs.labels_env }}
-          script: format('.{0}', matrix.env)
+          script: ${{ format('.{0}', matrix.env) }}
       - id: context
         run: |
           echo "${{ needs.context.outputs.labels }}"
