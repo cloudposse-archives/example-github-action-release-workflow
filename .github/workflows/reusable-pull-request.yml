@@ -53,7 +53,7 @@ jobs:
             }
           END
           )
-          echo "::set-output name=lables_env::${LABELS_ENV/\"/\\\"}"
+          echo "::set-output name=lables_env::${LABELS_ENV/\\\"/'}"
         shell: bash
     outputs:
       namespace: ${{ steps.context.outputs.namespace }}
