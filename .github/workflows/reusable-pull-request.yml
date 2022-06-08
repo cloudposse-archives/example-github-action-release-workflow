@@ -66,7 +66,7 @@ jobs:
       deploy_enabled: ${{ steps.context.outputs.deploy_enabled }}
       destroy_enabled: ${{ steps.context.outputs.destroy_enabled }}
       labels_env: ${{ steps.yaml2json.outputs.data }}
-      labels: ${{ toJson(inputs.labels) }}
+      labels: ${{ inputs.labels }}
 
   build:
     runs-on: ubuntu-latest
