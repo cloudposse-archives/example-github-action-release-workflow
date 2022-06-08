@@ -42,20 +42,27 @@ jobs:
           echo "::set-output name=build_enabled::${{     github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || ( github.event.action == 'labeled' && github.event.label.name == 'deploy' ) ) }}"
           echo "::set-output name=deploy_enabled::${{ (  github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}"
           echo "::set-output name=destroy_enabled::${{ ( github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'deploy')) || ( github.event.pull_request.state == 'open' && github.event.action == 'unlabeled' && github.event.label.name == 'deploy' ) }}"
-          
-          LABELS_ENV=$(cat <<EOF
-            {
-              "deploy": "preview",
-              "deploy/qa1": "qa1",
-              "deploy/qa2": "qa2",
-              "deploy/qa3": "qa3",
-              "deploy/qa4": "qa4",          
-            }
-          EOF
-          )
-          echo ${LABELS_ENV/\"/'}
-          #echo "::set-output name=lables_env::${LABELS_ENV}"
         shell: bash
+
+      - uses: 1arp/create-a-file-action@0.2
+        with:
+          path: './'
+          file: 'labels_env.yaml'
+          content: |
+            "deploy": "preview",
+            "deploy/qa1": "qa1",
+            "deploy/qa2": "qa2",
+            "deploy/qa3": "qa3",
+            "deploy/qa4": "qa4",          
+
+      - uses: fabasoad/yaml-json-xml-converter-action@main
+        id: yaml2json
+        with:
+          path: 'labels_env.yaml'
+          from: 'yaml'
+          to: 'json'
+        - name: Print yaml2json result
+          run: echo "${{ steps.yaml2json.outputs.data }}"
     outputs:
       namespace: ${{ steps.context.outputs.namespace }}
       build_enabled: ${{ steps.context.outputs.build_enabled }}
