@@ -60,14 +60,12 @@ jobs:
           path: 'labels_env.yaml'
           from: 'yaml'
           to: 'json'
-      - name: Print yaml2json result
-        run: echo "${{ steps.yaml2json.outputs.data }}"
     outputs:
       namespace: ${{ steps.context.outputs.namespace }}
       build_enabled: ${{ steps.context.outputs.build_enabled }}
       deploy_enabled: ${{ steps.context.outputs.deploy_enabled }}
       destroy_enabled: ${{ steps.context.outputs.destroy_enabled }}
-      labels_env: ${{ toJson(steps.context.outputs.lables_env) }}
+      labels_env: ${{ toJson(steps.yaml2json.outputs.data) }}
 
   build:
     runs-on: ubuntu-latest
