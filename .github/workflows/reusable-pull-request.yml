@@ -156,7 +156,7 @@ jobs:
         id: deployment
         with:
           github-token: ${{ github.token }}
-          ref-to-search: ${{ github.event.pull_request.head.sha }}
+          ref-to-search: ${{ github.event.pull_request.head.ref }}
           env-name: ${{ matrix.env }}
 
       - id: context
