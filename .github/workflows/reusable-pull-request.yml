@@ -43,7 +43,7 @@ jobs:
           echo "::set-output name=deploy_enabled::${{ (  github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}"
           echo "::set-output name=destroy_enabled::${{ ( github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'deploy')) || ( github.event.pull_request.state == 'open' && github.event.action == 'unlabeled' && github.event.label.name == 'deploy' ) }}"
           
-          LABELS_ENV=$(cat <<-END
+          LABELS_ENV=$(cat << EOF
             {
               "deploy": "preview",
               "deploy/qa1": "qa1",
@@ -51,9 +51,10 @@ jobs:
               "deploy/qa3": "qa3",
               "deploy/qa4": "qa4",          
             }
-          END
+          EOF
           )
-          echo "::set-output name=lables_env::${LABELS_ENV}"
+          echo ${LABELS_ENV}
+          #echo "::set-output name=lables_env::${LABELS_ENV}"
         shell: bash
     outputs:
       namespace: ${{ steps.context.outputs.namespace }}
