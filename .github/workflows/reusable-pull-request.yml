@@ -44,7 +44,7 @@ jobs:
           echo "::set-output name=${{ matrix.env }}::test-${{ matrix.env }}"
         shell: bash
     outputs:
-      namespace: ${{ toJson(steps.context.outputs) }}
+      ${{ matrix.env }}: ${{ toJson(steps.context.outputs) }}
 
   context:
     runs-on: ubuntu-latest
