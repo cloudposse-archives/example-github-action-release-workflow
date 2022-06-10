@@ -51,7 +51,7 @@ jobs:
     needs: ["test"]
     steps:
       - run: |
-          echo "${{ needs.test.outputs.namespace }}"
+          echo "${{ needs.test.outputs }}"
         shell: bash
       - id: context
         run: |
