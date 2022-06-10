@@ -107,7 +107,7 @@ jobs:
     strategy:
       matrix:
         # env: ["preview", "qa1", "qa2", "qa3", "qa4"]
-        env: ${{ needs.context.outputs.deploy_envs }}
+        env: ${{ toJson(needs.context.outputs.deploy_envs) }}
     environment:
       name: ${{ matrix.env }}
       url: ${{ steps.deploy.outputs.webapp-url }}
