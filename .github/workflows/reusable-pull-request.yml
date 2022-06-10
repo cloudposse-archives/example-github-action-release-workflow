@@ -33,26 +33,9 @@ env:
   ACTION_REPO_NAME: ${{ inputs.repository }}
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        env: ["qa1", "qa2"]
-    steps:
-      - id: context
-        run: |
-          echo "::set-output name=${{ matrix.env }}::test-${{ matrix.env }}"
-        shell: bash
-    outputs:
-      ${{ matrix.env }}: ${{ toJson(steps.context.outputs) }}
-
   context:
     runs-on: ubuntu-latest
-    needs: ["test"]
     steps:
-      - run: |
-          echo "${{ toJson(needs.test) }}"
-        shell: bash
       - id: context
         run: |
           echo "::set-output name=namespace::${{ github.event.pull_request.head.ref }}"
