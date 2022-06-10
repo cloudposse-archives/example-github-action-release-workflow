@@ -33,9 +33,26 @@ env:
   ACTION_REPO_NAME: ${{ inputs.repository }}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: ["qa1", "qa2"]
+    steps:
+      - id: context
+        run: |
+          echo "::set-output name=namespace::test-${{ matrix.env }}"
+        shell: bash
+    outputs:
+      namespace: ${{ steps.context.outputs.namespace }}
+
   context:
     runs-on: ubuntu-latest
+    needs: ["test"]
     steps:
+      - run: |
+          echo "${{ needs.test.outputs.namespace }}"
+        shell: bash
       - id: context
         run: |
           echo "::set-output name=namespace::${{ github.event.pull_request.head.ref }}"
@@ -107,21 +124,13 @@ jobs:
     if: ${{ inputs.open && needs.context.outputs.deploy_envs != '[]'  }}
     strategy:
       matrix:
-        # env: ["preview", "qa1", "qa2", "qa3", "qa4"]
         env: ${{ fromJson(needs.context.outputs.deploy_envs) }}
     environment:
       name: ${{ matrix.env }}
       url: ${{ steps.deploy.outputs.webapp-url }}
     needs: [ context, build ]
     steps:
-      - uses: edwardgeorge/jq-action@main
-        id: label
-        with:
-          input: ${{ needs.context.outputs.labels_env }}
-          script: ${{ format('.{0}', matrix.env) }}
-
       - name: Checkout
-        if: ${{ contains(needs.context.outputs.labels, steps.label.outputs.output) }}
         uses: actions/checkout@v3
 ##
 ##  Example how to use private shared actions
@@ -136,7 +145,6 @@ jobs:
       - name: Deploy
         uses: ./github-shared-actions/actions/deploy
         id: deploy
-        if: ${{ contains(needs.context.outputs.labels, steps.label.outputs.output) }}
         with:
           stack: dev
           environment: ${{ matrix.env }}
