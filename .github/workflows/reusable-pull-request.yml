@@ -41,10 +41,10 @@ jobs:
     steps:
       - id: context
         run: |
-          echo "::set-output name=namespace::test-${{ matrix.env }}"
+          echo "::set-output name=${{ matrix.env }}::test-${{ matrix.env }}"
         shell: bash
     outputs:
-      namespace: ${{ steps.context.outputs.namespace }}
+      namespace: ${{ steps.context.outputs }}
 
   context:
     runs-on: ubuntu-latest
