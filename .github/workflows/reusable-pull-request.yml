@@ -51,7 +51,7 @@ jobs:
     needs: ["test"]
     steps:
       - run: |
-          echo "${{ needs.test.outputs }}"
+          echo "${{ toJson(needs.test.outputs) }}"
         shell: bash
       - id: context
         run: |
