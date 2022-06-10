@@ -162,7 +162,7 @@ jobs:
 
       - id: context
         run: |
-          eho "::set-output name=test::${{ github.event.pull_request.head.ref }}"
+          echo "::set-output name=test::${{ steps.deployment.outputs.deploymentId }}"
           echo "::set-output name=closed::${{ ! inputs.open }}"
           echo "::set-output name=need_purge::${{ ! inputs.open || ! contains(needs.context.outputs.labels, steps.label.outputs.output) }}"
           echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deploymentId != '' }}"
