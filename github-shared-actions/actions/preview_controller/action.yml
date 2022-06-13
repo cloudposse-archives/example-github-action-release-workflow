@@ -6,10 +6,6 @@ inputs:
     required: true
     default: |
       preview: deploy
-      qa1: deploy/qa1
-      qa2: deploy/qa2
-      qa3: deploy/qa3
-      qa4: deploy/qa4
   labels:
     description: Existing PR labels
     required: true
