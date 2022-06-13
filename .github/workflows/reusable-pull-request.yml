@@ -217,4 +217,4 @@ jobs:
         with:
           state: inactive
           token: ${{ github.token }}
-          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
