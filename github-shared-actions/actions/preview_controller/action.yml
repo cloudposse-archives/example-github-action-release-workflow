@@ -43,6 +43,11 @@ runs:
         from: 'yaml'
         to: 'json'
 
+    - id: context
+      run: |
+        echo "::set-output name=namespace::${{ github.event.pull_request.head.ref }}"
+      shell: bash
+
     - uses: edwardgeorge/jq-action@main
       id: deploy_envs
       with:
