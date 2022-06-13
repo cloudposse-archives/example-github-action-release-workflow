@@ -171,10 +171,10 @@ jobs:
 
       - id: context
         run: |
-          echo "::set-output name=test::${{ steps.deployment.outputs.deploymentId }}"
+          echo "::set-output name=test::${{ steps.deployment.outputs.deployment_id }}"
           echo "::set-output name=closed::${{ ! inputs.open }}"
           echo "::set-output name=need_purge::${{ ! inputs.open || ! contains(needs.context.outputs.labels, steps.label.outputs.output) }}"
-          echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deploymentId != '' }}"
+          echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deployment_id != '' }}"
         shell: bash
 
       - name: Checkout
@@ -217,4 +217,4 @@ jobs:
         with:
           state: inactive
           token: ${{ github.token }}
-          deployment_id: ${{ steps.deployment.outputs.deploymentId }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
