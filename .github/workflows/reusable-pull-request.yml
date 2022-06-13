@@ -90,7 +90,7 @@ jobs:
       namespace: ${{ steps.context.outputs.namespace }}
       labels_env: ${{ steps.controller.outputs.labels_env }}
       labels: ${{ steps.controller.outputs.labels }}
-      deploy_envs: ${{ steps.controller.outputs.output }}
+      deploy_envs: ${{ steps.controller.outputs.deploy_envs }}
 
   build:
     runs-on: ubuntu-latest
