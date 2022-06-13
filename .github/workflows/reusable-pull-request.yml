@@ -160,7 +160,7 @@ jobs:
 #          ref-to-search: ${{ github.event.pull_request.head.ref }}
 #          env-name: ${{ matrix.env }}
 
-      - uses: juniuszhangserai/getDeploymentById@v2.7
+      - uses: simpleactions/get-last-deployment@v1.0.0
         id: deployment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
