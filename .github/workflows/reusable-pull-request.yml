@@ -36,6 +36,26 @@ jobs:
   context:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+##
+##  Example how to use private shared actions
+##
+#      - name: Checkout private actions
+#        uses: actions/checkout@v2
+#        with:
+#          repository: ${{ inputs.organization }}/github
+#          token: ${{ secrets.github-pat }}
+#          path: github
+
+      - name: Controller
+        uses: ./github-shared-actions/actions/preview_controller
+        id: controller
+        with:
+          labels: ${{ inputs.labels }}
+          open: ${{ inputs.open }}
+
       - id: context
         run: |
           echo "::set-output name=namespace::${{ github.event.pull_request.head.ref }}"
@@ -74,7 +94,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: [ context ]
     if: ${{ inputs.open }}
     steps:
       - name: Checkout
