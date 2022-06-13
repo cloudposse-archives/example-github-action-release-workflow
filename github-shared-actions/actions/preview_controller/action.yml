@@ -1,0 +1,65 @@
+name: 'Preview environment controller'
+description: 'Manage deploy/undeploy for preview environments depends of PR labels'
+inputs:
+  env-label:
+    description: "YAML formatted {environment}: {label} map "
+    required: true
+    default: |
+      preview: deploy
+      qa1: deploy/qa1
+      qa2: deploy/qa2
+      qa3: deploy/qa3
+      qa4: deploy/qa4
+  labels:
+    description: Existing PR labels
+    required: true
+    default: "[]"
+  open:
+    required: true
+    description: "Is PR open?"
+    default: "true"
+outputs:
+  labels_env:
+    description: "TO REMOVE"
+    value: ${{ steps.yaml2json.outputs.data }}
+  labels:
+    description: "TO REMOVE"
+    value: ${{ inputs.labels }}
+  deploy_envs:
+    description: "Environments that need to be deployed"
+    value: ${{ steps.deploy_envs.outputs.output }}
+  destroy_envs:
+    description: "Environments that need to be destroyed"
+    value: ${{ steps.destroy_envs.outputs.output }}
+runs:
+  using: "composite"
+  steps:
+    - uses: 1arp/create-a-file-action@0.2
+      with:
+        path: './'
+        file: 'labels_env.yaml'
+        content: ${{ inputs.env-label }}
+
+    - uses: fabasoad/yaml-json-xml-converter-action@main
+      id: yaml2json
+      with:
+        path: 'labels_env.yaml'
+        from: 'yaml'
+        to: 'json'
+
+    - uses: edwardgeorge/jq-action@main
+      id: deploy_envs
+      with:
+        compact: true
+        input: ${{ steps.yaml2json.outputs.data }}
+        script: ${{ format('with_entries(select(.value | IN({0}[]))) | keys', inputs.labels) }}
+
+    - uses: edwardgeorge/jq-action@main
+      id: destroy_envs
+      with:
+        compact: true
+        input: ${{ steps.yaml2json.outputs.data }}
+        script: ${{ format('with_entries(select(.value | IN({0}[]) | not )) | keys', inputs.labels) }}
+
+
+
