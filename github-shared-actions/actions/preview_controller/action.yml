@@ -46,7 +46,7 @@ runs:
     - id: pattern
       shell: bash
       run: |
-        if [[ "${{ inputs.open }}" -eq "true" ]]
+        if [ "${{ inputs.open }}" -eq "true" ]
         then
           echo "::set-output name=deploy::with_entries(select(.value | IN({0}[]))) | keys"
           echo "::set-output name=destroy::with_entries(select(.value | IN({0}[]) | not )) | keys"
