@@ -6,10 +6,6 @@ inputs:
     required: true
     default: |
       preview: deploy
-      qa1: deploy/qa1
-      qa2: deploy/qa2
-      qa3: deploy/qa3
-      qa4: deploy/qa4
   labels:
     description: Existing PR labels
     required: true
@@ -47,19 +43,31 @@ runs:
         from: 'yaml'
         to: 'json'
 
+    - id: pattern
+      shell: bash
+      run: |
+        if [[ "${{ inputs.open }}" -eq "true" ]]
+        then
+          echo "::set-output name=deploy::with_entries(select(.value | IN({0}[]))) | keys"
+          echo "::set-output name=destroy::with_entries(select(.value | IN({0}[]) | not )) | keys"
+        else
+          echo "::set-output name=deploy::[]"
+          echo "::set-output name=destroy::keys"
+        fi
+
     - uses: edwardgeorge/jq-action@main
       id: deploy_envs
       with:
         compact: true
         input: ${{ steps.yaml2json.outputs.data }}
-        script: ${{ format('with_entries(select(.value | IN({0}[]))) | keys', inputs.labels) }}
+        script: ${{ format(steps.pattern.outputs.deploy, inputs.labels) }}
 
     - uses: edwardgeorge/jq-action@main
       id: destroy_envs
       with:
         compact: true
         input: ${{ steps.yaml2json.outputs.data }}
-        script: ${{ format('with_entries(select(.value | IN({0}[]) | not )) | keys', inputs.labels) }}
+        script: ${{ format(steps.pattern.outputs.destroy, inputs.labels) }}
 
 
 

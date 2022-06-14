@@ -55,42 +55,24 @@ jobs:
         with:
           labels: ${{ inputs.labels }}
           open: ${{ inputs.open }}
-
-      - id: context
-        run: |
-          echo "::set-output name=namespace::${{ github.event.pull_request.head.ref }}"
-        shell: bash
-
-      - uses: 1arp/create-a-file-action@0.2
-        with:
-          path: './'
-          file: 'labels_env.yaml'
-          content: |
+          env-label: |
             preview: deploy
             qa1: deploy/qa1
             qa2: deploy/qa2
             qa3: deploy/qa3
             qa4: deploy/qa4
 
-      - uses: fabasoad/yaml-json-xml-converter-action@main
-        id: yaml2json
-        with:
-          path: 'labels_env.yaml'
-          from: 'yaml'
-          to: 'json'
-
-      - uses: edwardgeorge/jq-action@main
-        id: deploy_envs
-        with:
-          compact: true
-          input: ${{ steps.yaml2json.outputs.data }}
-          script: ${{ format('with_entries(select(.value | IN({0}[]))) | keys', inputs.labels) }}
+      - id: context
+        run: |
+          echo "::set-output name=namespace::${{ github.event.pull_request.head.ref }}"
+        shell: bash
 
     outputs:
       namespace: ${{ steps.context.outputs.namespace }}
-      labels_env: ${{ steps.yaml2json.outputs.data }}
-      labels: ${{ inputs.labels }}
-      deploy_envs: ${{ steps.deploy_envs.outputs.output }}
+      labels_env: ${{ steps.controller.outputs.labels_env }}
+      labels: ${{ steps.controller.outputs.labels }}
+      deploy_envs: ${{ steps.controller.outputs.deploy_envs }}
+      destroy_envs: ${{ steps.controller.outputs.destroy_envs }}
 
   build:
     runs-on: ubuntu-latest
@@ -163,22 +145,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        env: ["preview", "qa1", "qa2", "qa3", "qa4"]
+        env: ${{ fromJson(needs.context.outputs.destroy_envs) }}
     needs: [ context ]
     steps:
-      - uses: edwardgeorge/jq-action@main
-        id: label
-        with:
-          input: ${{ needs.context.outputs.labels_env }}
-          script: ${{ format('.{0}', matrix.env) }}
-
-#      - uses: juniuszhangserai/getDeploymentById@v2.7
-#        id: deployment
-#        with:
-#          github-token: ${{ github.token }}
-#          ref-to-search: ${{ github.event.pull_request.head.ref }}
-#          env-name: ${{ matrix.env }}
-
       - uses: simpleactions/get-last-deployment@v1.0.0
         id: deployment
         with:
@@ -192,15 +161,13 @@ jobs:
         run: |
           echo "::set-output name=test::${{ steps.deployment.outputs.deployment_id }}"
           echo "::set-output name=closed::${{ ! inputs.open }}"
-          echo "::set-output name=need_purge::${{ ! inputs.open || ! contains(needs.context.outputs.labels, steps.label.outputs.output) }}"
           echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deployment_id != '' }}"
         shell: bash
 
       - name: Checkout
-        if: ${{ steps.context.outputs.need_purge == 'true' && steps.context.outputs.deployment_exits == 'true' }}
+        if: ${{ steps.context.outputs.closed == 'true' && steps.context.outputs.deployment_exits == 'true' }}
         uses: actions/checkout@v3
 
-##
 ##  Example how to use private shared actions
 ##
 #      - name: Checkout private actions
@@ -212,7 +179,7 @@ jobs:
 
       - name: Destroy
         uses: ./github-shared-actions/actions/deploy
-        if: ${{ steps.context.outputs.need_purge == 'true' && steps.context.outputs.deployment_exits == 'true' }}
+        if: ${{ steps.context.outputs.closed == 'true' && steps.context.outputs.deployment_exits == 'true' }}
         id: deploy
         with:
           stack: dev
@@ -226,13 +193,19 @@ jobs:
 ##
 #          github-pat: ${{ secrets.github-pat }}
 
+      - uses: edwardgeorge/jq-action@main
+        id: label
+        with:
+          input: ${{ needs.context.outputs.labels_env }}
+          script: ${{ format('.{0}', matrix.env) }}
+
       - uses: peter-murray/remove-labels-action@v1
         if: ${{ steps.context.outputs.closed == 'true' }}
         with:
           labels: ${{ steps.label.outputs.output }}
 
       - uses: chrnorm/deployment-status@v2.0.0
-        if: ${{ steps.context.outputs.need_purge == 'true' && steps.context.outputs.deployment_exits == 'true' }}
+        if: ${{ steps.context.outputs.closed == 'true' && steps.context.outputs.deployment_exits == 'true' }}
         with:
           state: inactive
           token: ${{ github.token }}
