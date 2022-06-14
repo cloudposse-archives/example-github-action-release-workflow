@@ -52,7 +52,7 @@ runs:
           echo "::set-output name=destroy::with_entries(select(.value | IN({0}[]) | not )) | keys"
         else
           echo "::set-output name=deploy::[]"
-          echo "::set-output name=destroy::keys"
+          echo "::set-output name=destroy::with_entries(select(.value | IN({0}[]))) | keys"
         fi
 
     - uses: edwardgeorge/jq-action@main
