@@ -156,7 +156,7 @@ jobs:
 
 
 
-      - uses: James-LeHa/Get_Deployment_ID@main
+      - uses: James-LeHa/Get_Deployment_ID@master
         id: deployment
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
