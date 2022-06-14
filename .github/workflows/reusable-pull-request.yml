@@ -147,18 +147,27 @@ jobs:
         env: ${{ fromJson(needs.context.outputs.destroy_envs) }}
     needs: [ context ]
     steps:
-      - uses: simpleactions/get-last-deployment@v1.0.0
+#      - uses: simpleactions/get-last-deployment@v1.0.0
+#        id: deployment
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          environment: ${{ matrix.env }}
+#          ref: ${{ github.event.pull_request.head.ref }}
+
+
+
+      - uses: James-LeHa/Get_Deployment_ID@1.5
         id: deployment
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          environment: ${{ matrix.env }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          env-name: ${{ matrix.env }}
+          ref-to-search: ${{ github.event.pull_request.head.ref }}
 
       - id: context
         run: |
-          echo "::set-output name=test::${{ steps.deployment.outputs.deployment_id }}"
+          echo "::set-output name=test::${{ steps.deployment.outputs.deploymentId }}"
           echo "::set-output name=closed::${{ ! inputs.open }}"
-          echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deployment_id != '' }}"
+          echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deploymentId != '' }}"
         shell: bash
 
       - name: Checkout
@@ -206,4 +215,4 @@ jobs:
         with:
           state: inactive
           token: ${{ github.token }}
-          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          deployment-id: ${{ steps.deployment.outputs.deploymentId }}
