@@ -154,8 +154,6 @@ jobs:
 #          environment: ${{ matrix.env }}
 #          ref: ${{ github.event.pull_request.head.ref }}
 
-
-
       - uses: James-LeHa/Get_Deployment_ID@master
         id: deployment
         with:
