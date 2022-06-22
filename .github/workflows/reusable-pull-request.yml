@@ -155,13 +155,6 @@ jobs:
 #          ref: ${{ github.event.pull_request.head.ref }}
 
 #      - uses: James-LeHa/Get_Deployment_ID@master
-      - uses: ./github-shared-actions/actions/get_deployment
-        id: deployment
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          env-name: ${{ matrix.env }}
-          ref-to-search: ${{ github.event.pull_request.head.ref }}
-
       - id: context
         run: |
           echo "::set-output name=test::${{ steps.deployment.outputs.deploymentId }}"
@@ -172,6 +165,13 @@ jobs:
       - name: Checkout
         if: ${{ steps.context.outputs.closed == 'true' && steps.context.outputs.deployment_exits == 'true' }}
         uses: actions/checkout@v3
+
+      - uses: ./github-shared-actions/actions/get_deployment
+        id: deployment
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          env-name: ${{ matrix.env }}
+          ref-to-search: ${{ github.event.pull_request.head.ref }}
 
 ##  Example how to use private shared actions
 ##
