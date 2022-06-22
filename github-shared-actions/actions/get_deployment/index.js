@@ -74,20 +74,14 @@ async function getDeployments(envName)
 
   for(i = 0 ;i < deployments.length;i++)
   {
-    if (deployments[i].environment == envName)
-    {
-        console.log('For environment ' + deployments[i].environment)
-        const deploymentId = deployments[i].id
-        const deploymentCreatedAt = deployments[i].created_at
-        const deploymentUpdatedAt = deployments[i].updated_at
-        console.log("Deployment ID: " + deploymentId)
-        console.log("Created at: " + deploymentCreatedAt)
-        console.log("Updated at: " + deploymentUpdatedAt)
-
-
-        core.setOutput("deploymentId", deploymentId);
-    }
-    
+    console.log('For environment ' + deployments[i].environment)
+    const deploymentId = deployments[i].id
+    const deploymentCreatedAt = deployments[i].created_at
+    const deploymentUpdatedAt = deployments[i].updated_at
+    console.log("Deployment ID: " + deploymentId)
+    console.log("Created at: " + deploymentCreatedAt)
+    console.log("Updated at: " + deploymentUpdatedAt)
+    core.setOutput("deploymentId", deploymentId);
   }
 
 
