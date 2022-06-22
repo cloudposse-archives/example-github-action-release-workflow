@@ -71,22 +71,20 @@ async function listDeployments(refTag, envName)
 async function getDeployments(envName)
 {
   var deployments = await listDeployments(refToSearch, envName);
+  if (deployments.length > 0) {
+    let deployment = deployments[0]
 
-  for(i = 0 ;i < deployments.length;i++)
-  {
-    console.log('For environment ' + deployments[i].environment)
-    const deploymentId = deployments[i].id
-    const deploymentCreatedAt = deployments[i].created_at
-    const deploymentUpdatedAt = deployments[i].updated_at
-    console.log('For ref ' + deployments[i].ref)
+    console.log('For environment ' + deployment.environment)
+    const deploymentId = deployment.id
+    const deploymentCreatedAt = deployment.created_at
+    const deploymentUpdatedAt = deployment.updated_at
+    console.log('For ref ' + deployment.ref)
     console.log("Deployment ID: " + deploymentId)
     console.log("Created at: " + deploymentCreatedAt)
     console.log("Updated at: " + deploymentUpdatedAt)
 
     core.setOutput("deploymentId", deploymentId);
   }
-
-
 }
 
 getDeployments(envName);
