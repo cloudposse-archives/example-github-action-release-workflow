@@ -163,7 +163,7 @@ jobs:
         shell: bash
 
       - name: Checkout
-        if: ${{ steps.context.outputs.closed == 'true' && steps.context.outputs.deployment_exits == 'true' }}
+#        if: ${{ steps.context.outputs.closed == 'true' && steps.context.outputs.deployment_exits == 'true' }}
         uses: actions/checkout@v3
 
       - uses: ./github-shared-actions/actions/get_deployment
