@@ -42,7 +42,7 @@ else
 }
 
 
-async function listDeployments(refTag) 
+async function listDeployments(refTag)
 {
     // This should be a token with access to your repository scoped in as a secret.
   // The YML workflow will need to set myToken with the GitHub Secret Token
@@ -56,8 +56,8 @@ async function listDeployments(refTag)
   {
   //Check if milestone exists
     const { data: deployments } = await octokit.repos.listDeployments({
-    owner: github.context.owner,
-    repo: github.context.repo,
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
     ref: refTag
     })
 
