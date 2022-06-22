@@ -78,9 +78,11 @@ async function getDeployments(envName)
     const deploymentId = deployments[i].id
     const deploymentCreatedAt = deployments[i].created_at
     const deploymentUpdatedAt = deployments[i].updated_at
+    console.log('For ref ' + deployments[i].ref)
     console.log("Deployment ID: " + deploymentId)
     console.log("Created at: " + deploymentCreatedAt)
     console.log("Updated at: " + deploymentUpdatedAt)
+
     core.setOutput("deploymentId", deploymentId);
   }
 
