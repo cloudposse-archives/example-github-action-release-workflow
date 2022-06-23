@@ -99,6 +99,7 @@ async function getDeployments(envName)
       core.setOutput("deploymentId", deploymentId);
     }
     else {
+      const octokit = github.getOctokit(myToken)
       let statuses = await octokit.repos.listDeploymentStatuses({
         owner:          github.context.repo.owner,
         repo:           github.context.repo.repo,
