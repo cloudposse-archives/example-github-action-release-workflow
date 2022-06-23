@@ -13,16 +13,6 @@ on:
         required: false
         type: string
         default: registry.hub.docker.com
-##
-##  Example how to use private shared actions
-##
-#    secrets:
-#      github-pat:
-#        required: true
-
-env:
-  ORGANIZATION: ${{ inputs.organization }}
-  ACTION_REPO_NAME: ${{ inputs.repository }}
 
 jobs:
   build:
@@ -30,15 +20,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-##
-##  Example how to use private shared actions
-##
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#        with:
-#          repository: ${{ inputs.organization }}/github-shared-actions
-#          token: ${{ secrets.github-pat }}
-#          path: github-shared-actions
 
       - name: Build
         id: build
@@ -56,7 +37,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Drafts your next Release notes as Pull Requests are merged into "master"
-      - uses: release-drafter/release-drafter@v5
+      - name: Create/Update Draft release
+        uses: release-drafter/release-drafter@v5
         with:
           publish: false
           prerelease: false
@@ -74,16 +56,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-##
-##  Example how to use private shared actions
-##
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#        with:
-#          repository: ${{ inputs.organization }}/github-shared-actions
-#          token: ${{ secrets.github-pat }}
-#          path: github-shared-actions
-
       - name: Deploy
         uses: ./github-shared-actions/actions/deploy
         id: deploy
@@ -94,7 +66,3 @@ jobs:
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
           operation: apply
-##
-##  Example how to use private shared actions
-##
-#          github-pat: ${{ secrets.github-pat }}
