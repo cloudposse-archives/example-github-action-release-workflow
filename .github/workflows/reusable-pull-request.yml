@@ -170,9 +170,8 @@ jobs:
       - id: context
         run: |
           echo "::set-output name=test::${{ steps.deployment.outputs.deploymentId }}"
-          echo "::set-output name=closed::${{ ! inputs.open }}"
           echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deploymentId != '' }}"
-        shell: bash 
+        shell: bash
 
       ##  Example how to use private shared actions
 ##
@@ -185,7 +184,7 @@ jobs:
 
       - name: Destroy
         uses: ./github-shared-actions/actions/deploy
-        if: ${{ steps.context.outputs.closed == 'true' && steps.context.outputs.deployment_exits == 'true' }}
+        if: ${{ steps.context.outputs.deployment_exits == 'true' }}
         id: deploy
         with:
           stack: dev
@@ -206,12 +205,11 @@ jobs:
           script: ${{ format('.{0}', matrix.env) }}
 
       - uses: peter-murray/remove-labels-action@v1
-        if: ${{ steps.context.outputs.closed == 'true' }}
         with:
           labels: ${{ steps.label.outputs.output }}
 
       - uses: chrnorm/deployment-status@v2.0.0
-        if: ${{ steps.context.outputs.closed == 'true' && steps.context.outputs.deployment_exits == 'true' }}
+        if: ${{ steps.context.outputs.deployment_exits == 'true' }}
         with:
           state: inactive
           token: ${{ github.token }}
