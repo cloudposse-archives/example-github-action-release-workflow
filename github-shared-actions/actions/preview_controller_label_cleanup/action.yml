@@ -2,7 +2,7 @@ name: 'Preview environment controller labels cleanup'
 description: 'Remove PR labels'
 inputs:
   labels_env:
-    description: "JSON formatted {environment}: {label} map "
+    description: "JSON formatted {label}: {environment} map "
     required: true
     default: "{}"
   env:

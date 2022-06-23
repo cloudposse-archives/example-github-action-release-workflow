@@ -16,7 +16,7 @@ inputs:
     default: "true"
 outputs:
   labels_env:
-    description: "JSON formatted {environment}: {label} map"
+    description: "JSON formatted {label}: {environment} map"
     value: ${{ steps.yaml2json.outputs.data }}
   deploy_envs:
     description: "Environments that need to be deployed"
