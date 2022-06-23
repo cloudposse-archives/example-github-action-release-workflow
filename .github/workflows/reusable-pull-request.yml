@@ -204,6 +204,7 @@ jobs:
         id: label
         with:
           compact: true
+          raw-output: true
           input: ${{ needs.context.outputs.labels_env }}
           script: ${{ format('.{0}', matrix.env) }}
 
