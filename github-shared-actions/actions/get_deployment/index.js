@@ -95,6 +95,7 @@ async function getDeployments(envName)
     console.log("Created at: " + deploymentCreatedAt)
     console.log("Updated at: " + deploymentUpdatedAt)
 
+    console.log('With status ' + status)
     if (status === "") {
       console.log('Output deployment id ' + deploymentId)
       core.setOutput("deploymentId", deploymentId);
