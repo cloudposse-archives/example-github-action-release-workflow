@@ -106,10 +106,10 @@ async function getDeployments(envName)
         repo: github.context.repo.repo,
         deployment_id: deployment.id
       })
-
+      console.log('Statuses length ' + statuses.length)
       if (statuses.length > 0) {
         let deployment_status = statuses[0]
-        console.log('With status ' + deployment_status)
+        console.log('Current status ' + deployment_status)
         if (status == deployment_status) {
           console.log('Output deployment id ' + deploymentId)
           core.setOutput("deploymentId", deploymentId);
