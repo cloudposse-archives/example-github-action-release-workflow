@@ -36,6 +36,18 @@ else
    envName = core.getInput('env-name');
 }
 
+let status = "";
+
+if (process.env.status)
+{
+  status = process.env.status;
+}
+else
+{
+  status = core.getInput('status');
+}
+
+
 
 async function listDeployments(refTag, envName)
 {
@@ -70,7 +82,7 @@ async function listDeployments(refTag, envName)
 
 async function getDeployments(envName)
 {
-  var deployments = await listDeployments(refToSearch, envName);
+  let deployments = await listDeployments(refToSearch, envName);
   if (deployments.length > 0) {
     let deployment = deployments[0]
 
@@ -83,7 +95,24 @@ async function getDeployments(envName)
     console.log("Created at: " + deploymentCreatedAt)
     console.log("Updated at: " + deploymentUpdatedAt)
 
-    core.setOutput("deploymentId", deploymentId);
+    if (status === "") {
+      core.setOutput("deploymentId", deploymentId);
+    }
+    else {
+      let statuses = await octokit.repos.listDeploymentStatuses({
+        owner:          github.context.repo.owner,
+        repo:           github.context.repo.repo,
+        deployment_id:  deployment.id
+      })
+
+      if (statuses.length > 0) {
+        let deployment_status = statuses[0]
+        if (status == deployment_status) {
+          core.setOutput("deploymentId", deploymentId);
+        }
+      }
+
+      }
   }
 }
 
