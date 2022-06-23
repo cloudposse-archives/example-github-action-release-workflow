@@ -96,6 +96,7 @@ async function getDeployments(envName)
     console.log("Updated at: " + deploymentUpdatedAt)
 
     if (status === "") {
+      console.log('Output deployment id ' + deploymentId)
       core.setOutput("deploymentId", deploymentId);
     }
     else {
@@ -108,7 +109,9 @@ async function getDeployments(envName)
 
       if (statuses.length > 0) {
         let deployment_status = statuses[0]
+        console.log('With status ' + deployment_status)
         if (status == deployment_status) {
+          console.log('Output deployment id ' + deploymentId)
           core.setOutput("deploymentId", deploymentId);
         }
       }
