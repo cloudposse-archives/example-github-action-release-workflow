@@ -155,13 +155,6 @@ jobs:
 #          ref: ${{ github.event.pull_request.head.ref }}
 
 #      - uses: James-LeHa/Get_Deployment_ID@master
-      - id: context
-        run: |
-          echo "::set-output name=test::${{ steps.deployment.outputs.deploymentId }}"
-          echo "::set-output name=closed::${{ ! inputs.open }}"
-          echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deploymentId != '' }}"
-        shell: bash
-
       - name: Checkout
 #        if: ${{ steps.context.outputs.closed == 'true' && steps.context.outputs.deployment_exits == 'true' }}
         uses: actions/checkout@v3
@@ -174,7 +167,14 @@ jobs:
           ref-to-search: ${{ github.event.pull_request.head.ref }}
           status: "success"
 
-##  Example how to use private shared actions
+      - id: context
+        run: |
+          echo "::set-output name=test::${{ steps.deployment.outputs.deploymentId }}"
+          echo "::set-output name=closed::${{ ! inputs.open }}"
+          echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deploymentId != '' }}"
+        shell: bash 
+
+      ##  Example how to use private shared actions
 ##
 #      - name: Checkout private actions
 #        uses: actions/checkout@v2
