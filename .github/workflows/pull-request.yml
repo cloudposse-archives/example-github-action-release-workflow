@@ -12,6 +12,7 @@ jobs:
       repository: "${{ github.event.repository.name }}"
       open: ${{ github.event.pull_request.state == 'open' }}
       labels: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+      pr_number: ${{ github.event.pull_request.number }}
 
 #        ${{    github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || ( github.event.action == 'labeled' && github.event.label.name == 'deploy' ) ) }}"
 #        ${{ (  github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}"
