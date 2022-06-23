@@ -108,7 +108,7 @@ async function getDeployments(envName)
       })
       console.log('Statuses length ' + statuses.length)
       if (statuses.length > 0) {
-        let deployment_status = statuses[0]
+        let deployment_status = statuses[0].state
         console.log('Current status ' + deployment_status)
         if (status == deployment_status) {
           console.log('Output deployment id ' + deploymentId)
