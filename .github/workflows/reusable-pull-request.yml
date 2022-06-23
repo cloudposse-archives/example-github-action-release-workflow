@@ -20,9 +20,6 @@ on:
       labels:
         required: true
         type: string
-      pr_number:
-        required: true
-        type: string
 ##
 ##  Example how to use private shared actions
 ##
@@ -150,16 +147,7 @@ jobs:
         env: ${{ fromJson(needs.context.outputs.destroy_envs) }}
     needs: [ context ]
     steps:
-#      - uses: simpleactions/get-last-deployment@v1.0.0
-#        id: deployment
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          environment: ${{ matrix.env }}
-#          ref: ${{ github.event.pull_request.head.ref }}
-
-#      - uses: James-LeHa/Get_Deployment_ID@master
       - name: Checkout
-#        if: ${{ steps.context.outputs.closed == 'true' && steps.context.outputs.deployment_exits == 'true' }}
         uses: actions/checkout@v3
 
       - uses: ./github-shared-actions/actions/get_deployment
@@ -168,15 +156,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           env-name: ${{ matrix.env }}
           ref-to-search: ${{ github.event.pull_request.head.ref }}
-          status: "success"
+          status: success
 
-      - id: context
-        run: |
-          echo "::set-output name=test::${{ steps.deployment.outputs.deploymentId }}"
-          echo "::set-output name=deployment_exits::${{ steps.deployment.outputs.deploymentId != '' }}"
-        shell: bash
-
-      ##  Example how to use private shared actions
+##  Example how to use private shared actions
 ##
 #      - name: Checkout private actions
 #        uses: actions/checkout@v2
@@ -187,7 +169,7 @@ jobs:
 
       - name: Destroy
         uses: ./github-shared-actions/actions/deploy
-        if: ${{ steps.context.outputs.deployment_exits == 'true' }}
+        if: ${{ steps.deployment.outputs.deploymentId != '' }}
         id: deploy
         with:
           stack: dev
@@ -216,7 +198,7 @@ jobs:
           labels: ${{ steps.label.outputs.output }}
 
       - uses: chrnorm/deployment-status@v2.0.0
-        if: ${{ steps.context.outputs.deployment_exits == 'true' }}
+        if: ${{ steps.deployment.outputs.deploymentId != '' }}
         with:
           state: inactive
           token: ${{ github.token }}
