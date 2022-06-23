@@ -13,34 +13,45 @@ on:
         required: false
         type: string
         default: registry.hub.docker.com
-##
-##  Example how to use private shared actions
-##
-#    secrets:
-#      github-pat:
-#        required: true
-
-env:
-  ORGANIZATION: ${{ inputs.organization }}
-  ACTION_REPO_NAME: ${{ inputs.repository }}
+      open:
+        required: true
+        type: boolean
+        default: true
+      labels:
+        required: true
+        type: string
+      ref:
+        required: true
+        type: string
 
 jobs:
-  build:
+  context:
     runs-on: ubuntu-latest
-    if: ${{  github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || ( github.event.action == 'labeled' && github.event.label.name == 'deploy' ) ) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-##
-##  Example how to use private shared actions
-##
-#      - name: Checkout private actions
-#        uses: actions/checkout@v2
-#        with:
-#          repository: ${{ inputs.organization }}/github
-#          token: ${{ secrets.github-pat }}
-#          path: github
+      - name: Preview deployments controller
+        uses: ./github-shared-actions/actions/preview_controller
+        id: controller
+        with:
+          labels: ${{ inputs.labels }}
+          open: ${{ inputs.open }}
+          env-label: |
+            hotfix: deploy
+
+    outputs:
+      stack: staging
+      labels_env: ${{ steps.controller.outputs.labels_env }}
+      deploy_envs: ${{ steps.controller.outputs.deploy_envs }}
+      destroy_envs: ${{ steps.controller.outputs.destroy_envs }}
+
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.open }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Build
         id: build
@@ -56,92 +67,79 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ needs.context.outputs.deploy_envs != '[]'  }}
+    strategy:
+      matrix:
+        env: ${{ fromJson(needs.context.outputs.deploy_envs) }}
     environment:
-      name: hotfix
+      name: ${{ matrix.env }}
       url: ${{ steps.deploy.outputs.webapp-url }}
-    needs: [ build ]
-    if: ${{ ( github.event.pull_request.state == 'open' && ( github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled' ) && contains(github.event.pull_request.labels.*.name, 'deploy') ) }}
+    needs: [ context, build ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-##
-##  Example how to use private shared actions
-##
-#      - name: Checkout private actions
-#        uses: actions/checkout@v2
-#        with:
-#          repository: ${{ inputs.organization }}/github
-#          token: ${{ secrets.github-pat }}
-#          path: github-shared-actions
 
-      - uses: bobheadxi/deployments@v1
+      - name: Deactive hotfix environment
+        uses: bobheadxi/deployments@v1
         with:
           step: deactivate-env
           token: ${{ github.token }}
-          env: hotfix
-          desc: Environment was pruned
+          env: ${{ matrix.env }}
+          desc: Environment purged
 
       - name: Deploy
         uses: ./github-shared-actions/actions/deploy
         id: deploy
         with:
-          stack: staging
-          environment:  hotfix
-          namespace: hotfix
+          stack: ${{ needs.context.outputs.stack }}
+          environment: ${{ matrix.env }}
+          namespace: ${{ matrix.env }}
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
           operation: deploy
-##
-##  Example how to use private shared actions
-##
-#          github-pat: ${{ secrets.github-pat }}
 
   destroy:
     runs-on: ubuntu-latest
-    if: ${{ ( github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'deploy')) || ( github.event.pull_request.state == 'open' && github.event.action == 'unlabeled' && github.event.label.name == 'deploy' ) }}
+    if: ${{ needs.context.outputs.destroy_envs != '[]'  }}
+    strategy:
+      matrix:
+        env: ${{ fromJson(needs.context.outputs.destroy_envs) }}
+    needs: [ context ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-##
-##  Example how to use private shared actions
-##
-#      - name: Checkout private actions
-#        uses: actions/checkout@v2
-#        with:
-#          repository: ${{ inputs.organization }}/github
-#          token: ${{ secrets.github-pat }}
-#          path: github-shared-actions
-
-      - uses: juniuszhangserai/getDeploymentById@v2.7
+      - name: Seek deployment
+        uses: ./github-shared-actions/actions/get_deployment
         id: deployment
         with:
-          github-token: ${{ github.token }}
-          ref-to-search: ${{ github.event.pull_request.head.sha }}
-          env-name: hotfix
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          env-name: ${{ matrix.env }}
+          ref-to-search: ${{ inputs.ref}}
+          status: success
 
       - name: Destroy
         uses: ./github-shared-actions/actions/deploy
         id: deploy
         with:
-          stack: staging
-          environment:  hotfix
-          namespace: hotfix
+          stack: ${{ needs.context.outputs.stack }}
+          environment: ${{ matrix.env }}
+          namespace: ${{ matrix.env }}
           image: "<none>"
           image-tag: "<none>"
           operation: destroy
-##
-##  Example how to use private shared actions
-##
-#          github-pat: ${{ secrets.github-pat }}
 
-      - uses: peter-murray/remove-labels-action@v1
+      - name: Cleanup label
+        uses: ./github-shared-actions/actions/preview_controller_label_cleanup
+        if: ${{ ! inputs.open }}
         with:
-          labels: deploy
+          labels_env: ${{ needs.context.outputs.labels_env }}
+          env: ${{ matrix.env }}
 
-      - uses: chrnorm/deployment-status@v2.0.0
-        if: steps.deployment.outputs.deploymentId != ''
+      - name: Inactivate deployment
+        uses: chrnorm/deployment-status@v2.0.0
+        if: ${{ steps.deployment.outputs.deploymentId != '' }}
         with:
           state: inactive
           token: ${{ github.token }}
-          deployment_id: ${{ steps.deployment.outputs.deploymentId }}
+          deployment-id: ${{ steps.deployment.outputs.deploymentId }}

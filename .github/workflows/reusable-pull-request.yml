@@ -45,6 +45,7 @@ jobs:
             qa4: deploy/qa4
 
     outputs:
+      stack: dev
       namespace: ${{ inputs.ref }}
       labels_env: ${{ steps.controller.outputs.labels_env }}
       deploy_envs: ${{ steps.controller.outputs.deploy_envs }}
@@ -87,7 +88,7 @@ jobs:
         uses: ./github-shared-actions/actions/deploy
         id: deploy
         with:
-          stack: dev
+          stack: ${{ needs.context.outputs.stack }}
           environment: ${{ matrix.env }}
           namespace: ${{ needs.context.outputs.namespace }}
           image: ${{ needs.build.outputs.image }}
@@ -119,7 +120,7 @@ jobs:
         if: ${{ steps.deployment.outputs.deploymentId != '' }}
         id: deploy
         with:
-          stack: dev
+          stack: ${{ needs.context.outputs.stack }}
           environment:  ${{ matrix.env }}
           namespace: ${{ needs.context.outputs.namespace }}
           image: "<none>"

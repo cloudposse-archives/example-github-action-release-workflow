@@ -10,8 +10,6 @@ jobs:
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"
-##
-##  Example how to use private shared actions
-##
-#    secrets:
-#      github-pat: "${{ secrets.ADMIN_GITHUB_TOKEN }}"
+      open: ${{ github.event.pull_request.state == 'open' }}
+      labels: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+      ref: ${{ github.event.pull_request.head.ref  }}
