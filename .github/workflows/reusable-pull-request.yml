@@ -201,6 +201,7 @@ jobs:
 #          github-pat: ${{ secrets.github-pat }}
 
       - uses: edwardgeorge/jq-action@main
+        if: ${{ ! inputs.open }}
         id: label
         with:
           compact: true
@@ -209,6 +210,7 @@ jobs:
           script: ${{ format('.{0}', matrix.env) }}
 
       - uses: peter-murray/remove-labels-action@v1
+        if: ${{ ! inputs.open }}
         with:
           labels: ${{ steps.label.outputs.output }}
 
