@@ -30,10 +30,6 @@ on:
 #      github-pat:
 #        required: true
 
-env:
-  ORGANIZATION: ${{ inputs.organization }}
-  ACTION_REPO_NAME: ${{ inputs.repository }}
-
 jobs:
   context:
     runs-on: ubuntu-latest
@@ -64,13 +60,8 @@ jobs:
             qa3: deploy/qa3
             qa4: deploy/qa4
 
-      - id: context
-        run: |
-          echo "::set-output name=namespace::${{ inputs.ref }}"
-        shell: bash
-
     outputs:
-      namespace: ${{ steps.context.outputs.namespace }}
+      namespace: ${{ inputs.ref }}
       labels_env: ${{ steps.controller.outputs.labels_env }}
       deploy_envs: ${{ steps.controller.outputs.deploy_envs }}
       destroy_envs: ${{ steps.controller.outputs.destroy_envs }}
@@ -105,7 +96,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ inputs.open && needs.context.outputs.deploy_envs != '[]'  }}
+    if: ${{ needs.context.outputs.deploy_envs != '[]'  }}
     strategy:
       matrix:
         env: ${{ fromJson(needs.context.outputs.deploy_envs) }}
@@ -185,19 +176,12 @@ jobs:
 ##
 #          github-pat: ${{ secrets.github-pat }}
 
-      - uses: edwardgeorge/jq-action@main
-        if: ${{ ! inputs.open }}
-        id: label
-        with:
-          compact: true
-          raw-output: true
-          input: ${{ needs.context.outputs.labels_env }}
-          script: ${{ format('.{0}', matrix.env) }}
-
-      - uses: peter-murray/remove-labels-action@v1
+      - name: Cleanup labels
+        uses: ./github-shared-actions/actions/preview_controller_label_cleanup
         if: ${{ ! inputs.open }}
         with:
-          labels: ${{ steps.label.outputs.output }}
+          labels_env: ${{ needs.context.outputs.labels_env }}
+          env: ${{ matrix.env }}
 
       - uses: chrnorm/deployment-status@v2.0.0
         if: ${{ steps.deployment.outputs.deploymentId != '' }}
