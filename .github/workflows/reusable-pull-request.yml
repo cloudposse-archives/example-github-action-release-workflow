@@ -210,6 +210,7 @@ jobs:
         with:
           labels: ${{ steps.label.outputs.output }}
           issue_number: ${{ inputs.pr_number }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: chrnorm/deployment-status@v2.0.0
         if: ${{ steps.context.outputs.deployment_exits == 'true' }}
