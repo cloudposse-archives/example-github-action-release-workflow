@@ -9,8 +9,4 @@ jobs:
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"
-##
-##  Example how to use private shared actions
-##
-#    secrets:
-#      github-pat: "${{ secrets.ADMIN_GITHUB_TOKEN }}"
+      version: ${{ github.event.release.tag_name }}
