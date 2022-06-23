@@ -101,7 +101,7 @@ async function getDeployments(envName)
       core.setOutput("deploymentId", deploymentId);
     }
     else {
-      let statuses = await github.getOctokit(myToken).repos.listDeploymentStatuses({
+      const { data: statuses }  = await github.getOctokit(myToken).repos.listDeploymentStatuses({
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
         deployment_id: deployment.id
