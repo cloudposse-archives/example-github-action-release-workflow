@@ -20,6 +20,9 @@ on:
       labels:
         required: true
         type: string
+      ref:
+        required: true
+        type: string
 ##
 ##  Example how to use private shared actions
 ##
@@ -63,13 +66,12 @@ jobs:
 
       - id: context
         run: |
-          echo "::set-output name=namespace::${{ github.event.pull_request.head.ref }}"
+          echo "::set-output name=namespace::${{ inputs.ref }}"
         shell: bash
 
     outputs:
       namespace: ${{ steps.context.outputs.namespace }}
       labels_env: ${{ steps.controller.outputs.labels_env }}
-      labels: ${{ steps.controller.outputs.labels }}
       deploy_envs: ${{ steps.controller.outputs.deploy_envs }}
       destroy_envs: ${{ steps.controller.outputs.destroy_envs }}
 
@@ -155,7 +157,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           env-name: ${{ matrix.env }}
-          ref-to-search: ${{ github.event.pull_request.head.ref }}
+          ref-to-search: ${{ inputs.ref}}
           status: success
 
 ##  Example how to use private shared actions

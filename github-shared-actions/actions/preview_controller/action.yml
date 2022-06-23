@@ -18,9 +18,6 @@ outputs:
   labels_env:
     description: "TO REMOVE"
     value: ${{ steps.yaml2json.outputs.data }}
-  labels:
-    description: "TO REMOVE"
-    value: ${{ inputs.labels }}
   deploy_envs:
     description: "Environments that need to be deployed"
     value: ${{ steps.deploy_envs.outputs.output }}
