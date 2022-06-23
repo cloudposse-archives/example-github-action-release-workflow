@@ -172,7 +172,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           env-name: ${{ matrix.env }}
           ref-to-search: ${{ github.event.pull_request.head.ref }}
-          status: "active"
+          status: "success"
 
 ##  Example how to use private shared actions
 ##
