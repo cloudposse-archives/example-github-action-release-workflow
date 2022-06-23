@@ -69,7 +69,7 @@ async function listDeployments(refTag, envName)
     ref: refTag
     })
 
-    return deployments.reverse();
+    return deployments;
   }
   catch(error) 
   {
