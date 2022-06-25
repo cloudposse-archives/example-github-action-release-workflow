@@ -11,6 +11,9 @@ inputs:
   env-name:
     description: 'environment name to get ID for'
     required: true
+  status:
+    required: false
+    description: 'status to get ID for'
 outputs:
   deploymentId: 
     description: 'deployment id retrieved based on ref and environment'

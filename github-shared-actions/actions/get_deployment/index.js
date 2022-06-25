@@ -1,8 +1,3 @@
-// https://github.com/nodeca/js-yaml
-const yaml = require('js-yaml');
-const fs   = require('fs');
-
-
 const core = require('@actions/core');
 const github = require('@actions/github');
 
@@ -41,10 +36,22 @@ else
    envName = core.getInput('env-name');
 }
 
+let status = "";
 
-async function listDeployments(refTag) 
+if (process.env.status)
 {
-    // This should be a token with access to your repository scoped in as a secret.
+  status = process.env.status;
+}
+else
+{
+  status = core.getInput('status');
+}
+
+
+
+async function listDeployments(refTag, envName)
+{
+  // This should be a token with access to your repository scoped in as a secret.
   // The YML workflow will need to set myToken with the GitHub Secret Token
   // myToken: ${{ secrets.GITHUB_TOKEN }}
   // https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token#about-the-github_token-secret
@@ -54,15 +61,15 @@ async function listDeployments(refTag)
 
   try
   {
-  //Check if milestone exists
+    //Check if milestone exists
     const { data: deployments } = await octokit.repos.listDeployments({
-    owner: github.context.owner,
-    repo: github.context.repo,
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    environment: envName,
     ref: refTag
     })
 
-    return deployments.reverse();
-
+    return deployments;
   }
   catch(error) 
   {
@@ -75,27 +82,41 @@ async function listDeployments(refTag)
 
 async function getDeployments(envName)
 {
-  var deployments = await listDeployments(refToSearch);
+  let deployments = await listDeployments(refToSearch, envName);
+  if (deployments.length > 0) {
+    let deployment = deployments[0]
 
-  for(i = 0 ;i < deployments.length;i++)
-  {
-    if (deployments[i].environment == envName)
-    {
-        console.log('For environment ' + deployments[i].environment)
-        const deploymentId = deployments[i].id
-        const deploymentCreatedAt = deployments[i].created_at
-        const deploymentUpdatedAt = deployments[i].updated_at
-        console.log("Deployment ID: " + deploymentId)
-        console.log("Created at: " + deploymentCreatedAt)
-        console.log("Updated at: " + deploymentUpdatedAt)
+    console.log('For environment ' + deployment.environment)
+    const deploymentId = deployment.id
+    const deploymentCreatedAt = deployment.created_at
+    const deploymentUpdatedAt = deployment.updated_at
+    console.log('For ref ' + deployment.ref)
+    console.log("Deployment ID: " + deploymentId)
+    console.log("Created at: " + deploymentCreatedAt)
+    console.log("Updated at: " + deploymentUpdatedAt)
 
-
-        core.setOutput("deploymentId", deploymentId);
+    console.log('With status ' + status)
+    if (status === "") {
+      console.log('Output deployment id ' + deploymentId)
+      core.setOutput("deploymentId", deploymentId);
     }
-    
+    else {
+      const { data: statuses }  = await github.getOctokit(myToken).repos.listDeploymentStatuses({
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        deployment_id: deployment.id
+      })
+      console.log('Statuses length ' + statuses.length)
+      if (statuses.length > 0) {
+        let deployment_status = statuses[0].state
+        console.log('Current status ' + deployment_status)
+        if (status == deployment_status) {
+          console.log('Output deployment id ' + deploymentId)
+          core.setOutput("deploymentId", deploymentId);
+        }
+      }
+    }
   }
-
-
 }
 
 getDeployments(envName);
