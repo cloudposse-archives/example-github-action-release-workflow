@@ -112,7 +112,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           env-name: ${{ matrix.env }}
-          ref-to-search: ${{ inputs.ref}}
+          ref-to-search: ${{ inputs.ref }}
           status: success
 
       - name: Destroy
