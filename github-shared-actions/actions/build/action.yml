@@ -31,6 +31,8 @@ runs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
+      env:
+        AWS_REGION: us-east-2
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
