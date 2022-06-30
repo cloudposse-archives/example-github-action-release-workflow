@@ -52,6 +52,10 @@ runs:
           echo "::set-output name=destroy::with_entries(select(.value | IN({0}[]))) | keys"
         fi
 
+    - name: Install yq
+      id: setup-yq
+      uses: shiipou/setup-yq-action@v2.0.1
+
     - uses: edwardgeorge/jq-action@main
       id: deploy_envs
       with:
