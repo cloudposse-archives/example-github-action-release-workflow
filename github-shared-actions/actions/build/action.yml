@@ -17,7 +17,7 @@ inputs:
 outputs:
   image:
     description: "Docker image name"
-    value: ${{ inputs.registry }}/${{ inputs.repository }}
+    value: ${{ inputs.registry }}/${{ inputs.organization }}/${{ inputs.repository }}
   tag:
     description: "Docker image tag"
     value: ${{ steps.context.outputs.tag }}
