@@ -13,3 +13,4 @@ jobs:
       open: ${{ github.event.pull_request.state == 'open' }}
       labels: ${{ toJSON(github.event.pull_request.labels.*.name) }}
       ref: ${{ github.event.pull_request.head.ref  }}
+      registry: 252494810635.dkr.ecr.us-east-2.amazonaws.com
