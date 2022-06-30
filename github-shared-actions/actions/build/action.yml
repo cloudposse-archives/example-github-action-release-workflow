@@ -40,6 +40,6 @@ runs:
       with:
         context: ${{ inputs.workdir }}
         push: true
-        tags: ${{ inputs.registry }}/${{ inputs.repository }}:${{ steps.context.outputs.tag }}
+        tags: ${{ inputs.registry }}/${{ inputs.organization }}/${{ inputs.repository }}:${{ steps.context.outputs.tag }}
         labels: org.opencontainers.image.source=https://github.com/${{ inputs.organization }}/${{ inputs.repository }}
 
