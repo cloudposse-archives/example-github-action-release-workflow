@@ -26,7 +26,7 @@ on:
 
 jobs:
   context:
-    runs-on: [self-hosted]
+    runs-on: ["self-hosted"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -52,7 +52,7 @@ jobs:
       destroy_envs: ${{ steps.controller.outputs.destroy_envs }}
 
   build:
-    runs-on: [self-hosted]
+    runs-on: ["self-hosted"]
     if: ${{ inputs.open }}
     steps:
       - name: Checkout
@@ -71,7 +71,7 @@ jobs:
       tag: ${{ steps.build.outputs.tag }}
 
   deploy:
-    runs-on: [self-hosted]
+    runs-on: ["self-hosted"]
     if: ${{ needs.context.outputs.deploy_envs != '[]'  }}
     strategy:
       matrix:
@@ -96,7 +96,7 @@ jobs:
           operation: deploy
 
   destroy:
-    runs-on: [self-hosted]
+    runs-on: ["self-hosted"]
     if: ${{ needs.context.outputs.destroy_envs != '[]'  }}
     strategy:
       matrix:
