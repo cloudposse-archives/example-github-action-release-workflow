@@ -52,7 +52,7 @@ jobs:
       destroy_envs: ${{ steps.controller.outputs.destroy_envs }}
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted"]
     if: ${{ inputs.open }}
     steps:
       - name: Checkout
@@ -112,7 +112,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           env-name: ${{ matrix.env }}
-          ref-to-search: ${{ inputs.ref}}
+          ref-to-search: ${{ inputs.ref }}
           status: success
 
       - name: Destroy
