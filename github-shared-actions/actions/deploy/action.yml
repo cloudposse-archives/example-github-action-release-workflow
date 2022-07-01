@@ -44,7 +44,7 @@ runs:
     uses: aws-actions/configure-aws-credentials@v1
     with:
       aws-region: ${{ inputs.aws-region }}
-      role-to-assume: arn:aws:iam::068007702576:role/cplive-plat-gbl-dev-admin
+      role-to-assume: arn:aws:iam::555042905974:role/cplive-core-gbl-identity-cicd
   - name: S3 Sync
     uses: giboow/action-aws-cli@v1
     with:
