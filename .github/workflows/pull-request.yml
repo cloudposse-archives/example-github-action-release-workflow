@@ -6,7 +6,7 @@ on:
 
 jobs:
   default:
-    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@main
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@real-deploy
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"

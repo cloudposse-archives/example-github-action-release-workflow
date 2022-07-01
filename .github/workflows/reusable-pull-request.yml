@@ -71,7 +71,7 @@ jobs:
       tag: ${{ steps.build.outputs.tag }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted"]
     if: ${{ needs.context.outputs.deploy_envs != '[]'  }}
     strategy:
       matrix:
@@ -96,7 +96,7 @@ jobs:
           operation: deploy
 
   destroy:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted"]
     if: ${{ needs.context.outputs.destroy_envs != '[]'  }}
     strategy:
       matrix:

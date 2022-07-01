@@ -40,6 +40,14 @@ outputs:
 runs:
   using: "composite"
   steps:
+  - name: S3 Sync
+    uses: ItsKarma/aws-cli@v1.70.0
+    with:
+      args: eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME} --role-arn=${CLUSTER_ROLE_ARN}
+    env:
+      AWS_REGION: ${{ inputs.aws-region }}
+      CLUSTER_NAME: cplive-plat-ue2-dev-eks-blue-cluster
+      CLUSTER_ROLE: arn:aws:iam::068007702576:role/cplive-plat-gbl-dev-admin
   - shell: sh
     run: |
       sleep $((RANDOM % 10)) && \
