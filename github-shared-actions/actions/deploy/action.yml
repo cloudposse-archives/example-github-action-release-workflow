@@ -41,7 +41,7 @@ runs:
   using: "composite"
   steps:
   - name: S3 Sync
-    uses: ItsKarma/aws-cli@v1.70.0
+    uses: giboow/action-aws-cli@v1
     with:
       args: eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME} --role-arn=${CLUSTER_ROLE_ARN}
     env:
