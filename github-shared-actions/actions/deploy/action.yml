@@ -43,12 +43,7 @@ runs:
   - name: S3 Sync
     uses: giboow/action-aws-cli@v1
     with:
-      args: |
-        eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME} --role-arn=${CLUSTER_ROLE_ARN}
-    env:
-      AWS_REGION: ${{ inputs.aws-region }}
-      CLUSTER_NAME: cplive-plat-ue2-dev-eks-blue-cluster
-      CLUSTER_ROLE: arn:aws:iam::068007702576:role/cplive-plat-gbl-dev-admin
+      args: eks --region ${{ inputs.aws-region }} update-kubeconfig --name cplive-plat-ue2-dev-eks-blue-cluster --role-arn=arn:aws:iam::068007702576:role/cplive-plat-gbl-dev-admin
   - shell: sh
     run: |
       sleep $((RANDOM % 10)) && \
