@@ -41,7 +41,6 @@ runs:
   using: "composite"
   steps:
   - name: Configure AWS Credentials
-    if: steps.vars.outputs.aws_assume_role == 'true'
     uses: aws-actions/configure-aws-credentials@v1
     with:
       aws-region: ${{ inputs.aws-region }}
