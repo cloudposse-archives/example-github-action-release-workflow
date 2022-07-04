@@ -46,10 +46,19 @@ runs:
       aws-region: ${{ inputs.aws-region }}
       role-to-assume: arn:aws:iam::555042905974:role/cplive-core-gbl-identity-cicd
       role-skip-session-tagging: true
+
+  - name: Configure AWS Credentials
+    uses: aws-actions/configure-aws-credentials@v1
+    with:
+      aws-region: ${{ inputs.aws-region }}
+      role-to-assume: arn:aws:iam::555042905974:role/cplive-core-gbl-dev-cicd
+      role-skip-session-tagging: true
+
   - name: S3 Sync
     uses: giboow/action-aws-cli@v1
     with:
-      args: eks --region ${{ inputs.aws-region }} update-kubeconfig --name cplive-plat-ue2-dev-eks-blue-cluster --role-arn arn:aws:iam::555042905974:role/cplive-core-gbl-dev-cicd
+      args: eks --region ${{ inputs.aws-region }} update-kubeconfig --name cplive-plat-ue2-dev-eks-blue-cluster --role-arn arn:aws:iam::555042905974:role/cplive-core-gbl-identity-cicd
+
   - shell: sh
     run: |
       sleep $((RANDOM % 10)) && \
