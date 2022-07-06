@@ -51,7 +51,7 @@ runs:
     uses: aws-actions/configure-aws-credentials@v1
     with:
       aws-region: ${{ inputs.aws-region }}
-      role-to-assume: arn:aws:iam::068007702576:role/cplive-core-gbl-dev-helm
+      role-to-assume: arn:aws:iam::068007702576:role/cplive-plat-gbl-dev-helm
       role-skip-session-tagging: true
       aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
