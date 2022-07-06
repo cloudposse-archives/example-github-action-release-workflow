@@ -95,9 +95,9 @@ releases:
             enabled: true
             port: default
             annotations:
-              external-dns.alpha.kubernetes.io/target: ${{ .Values.platform.default_ingress_domain }}
-              alb.ingress.kubernetes.io/group.name: ${{ .Values.platform.default_alb_ingress_group }}
-              external-dns.alpha.kubernetes.io/hostname: example-workflow.${{ .Values.platform.default_ingress_domain }}
+              external-dns.alpha.kubernetes.io/target: {{ .Values.platform.default_ingress_domain }}
+              alb.ingress.kubernetes.io/group.name: {{ .Values.platform.default_alb_ingress_group }}
+              external-dns.alpha.kubernetes.io/hostname: example-workflow.{{ .Values.platform.default_ingress_domain }}
               kubernetes.io/ingress.class: alb
               alb.ingress.kubernetes.io/scheme: internet-facing
               alb.ingress.kubernetes.io/actions.ssl-redirect: '{"RedirectConfig":{"Port":"443","Protocol":"HTTPS","StatusCode":"HTTP_301"},"Type":"redirect"}'
@@ -105,4 +105,4 @@ releases:
               alb.ingress.kubernetes.io/ssl-redirect: "443"
               alb.ingress.kubernetes.io/target-type: ip
             hosts:
-              "example-workflow.${{ .Values.platform.default_ingress_domain }}": /
+              "example-workflow.{{ .Values.platform.default_ingress_domain }}": /
