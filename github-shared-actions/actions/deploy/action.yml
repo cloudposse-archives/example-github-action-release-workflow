@@ -71,7 +71,7 @@ runs:
       helm-version: "v3.7.2"
       kubectl-version: 1.22.9
       kubectl-release-date: 2022-06-03
-      install-kubectl: true
+      install-kubectl: yes
       install-helm: yes
       install-helm-plugins: yes
       helm-diff-plugin-version: master
