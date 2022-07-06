@@ -1,0 +1,9 @@
+environments:
+  preview:
+  staging:
+  production:
+
+helmfiles:
+  - path: {{ requiredEnv "APPLICATION_HELMFILE" }}
+#    values:
+#      - /tmp/platform.yaml

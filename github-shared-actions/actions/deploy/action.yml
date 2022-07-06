@@ -17,7 +17,7 @@ inputs:
     required: false
     default: helmfile.yaml
   operation:
-    description: Operation with helmfiles. (valid options - `apply`, `destroy`)
+    description: Operation with helmfiles. (valid options - `deploy`, `destroy`)
     required: true
     default: apply
   environment:
@@ -38,7 +38,20 @@ outputs:
     description: "Web Application url"
     value: https://${{ inputs.namespace }}.${{ inputs.environment }}.example.com
 runs:
-  using: "composite"
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    STACK: ${{ inputs.stack }}
+    AWS_REGION: ${{ inputs.aws-region }}
+    ENVIRONMENT: ${{ inputs.environment }}
+    HELMFILE: ${{ inputs.helmfile }}
+    HELMFILE_PATH: ${{ inputs.helmfile-path }}
+    NAMESPACE: ${{ inputs.namespace }}
+    IMAGE: ${{ inputs.image }}
+    IMAGE_TAG: ${{ inputs.image-tag }}
+    OPERATION: ${{ inputs.operation }}
+
+
   steps:
   - name: Setup helmfile
     uses: mamezou-tech/setup-helmfile@v1.0.0
@@ -58,14 +71,14 @@ runs:
     uses: aws-actions/configure-aws-credentials@v1
     with:
       aws-region: ${{ inputs.aws-region }}
-      role-to-assume: arn:aws:iam::555042905974:role/cplive-core-gbl-identity-cicd
+      role-to-assume:
       role-skip-session-tagging: true
 
   - name: Configure AWS Credentials
     uses: aws-actions/configure-aws-credentials@v1
     with:
       aws-region: ${{ inputs.aws-region }}
-      role-to-assume: arn:aws:iam::068007702576:role/cplive-plat-gbl-dev-helm
+      role-to-assume:
       role-skip-session-tagging: true
       aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
@@ -76,18 +89,13 @@ runs:
   - name: S3 Sync
     uses: giboow/action-aws-cli@v1
     with:
-      args: eks --region ${{ inputs.aws-region }} update-kubeconfig --name cplive-plat-ue2-dev-eks-blue-cluster --kubeconfig ./.kube/config
+      args: eks --region ${{ inputs.aws-region }} update-kubeconfig --name  --kubeconfig ./.kube/config
 
   - shell: sh
     run: |
       cat ./.kube/config
       kubectl get ns
       # Helm Deployment
-      if [[ "${{ inputs.operation }}" == "deploy" ]]; then 
-        OPERATION="apply"
-      elif [[ "${{ inputs.operation }}" == "destroy" ]]; then
-        OPERATION="destroy"
-      fi
       OPERATION_COMMAND="helmfile --namespace ${NAMESPACE} --environment ${ENVIRONMENT} --file ./${HELMFILE_DIR}/${HELMFILE} ${OPERATION}"
       echo "Executing: ${OPERATION_COMMAND}"
       ${OPERATION_COMMAND}
