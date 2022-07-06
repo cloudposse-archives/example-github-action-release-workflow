@@ -22,7 +22,7 @@ releases:
     version: "0.23.1"
     createNamespace: true
     wait: true
-    atomic: true
+    atomic: false
     # the section where we pass in what the target helm chart expects in it's values.yaml
     # explanation in this section will be specific to monochart
     #
