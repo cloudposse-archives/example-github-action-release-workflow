@@ -47,6 +47,6 @@ runs:
     HELMFILE: ${{ inputs.helmfile }}
     HELMFILE_PATH: ${{ inputs.helmfile-path }}
     NAMESPACE: ${{ inputs.namespace }}
-    IMAGE: ${{ inputs.image }}
+    IMAGE_NAME: ${{ inputs.image }}
     IMAGE_TAG: ${{ inputs.image-tag }}
     OPERATION: ${{ inputs.operation }}
