@@ -77,3 +77,5 @@ RELEASES_COUNTS=$(helm --namespace ${NAMESPACE} list --output json | jq 'length'
 if [[ "${RELEASES_COUNTS}" == "0" ]]; then
 	kubectl delete ns ${NAMESPACE}
 fi
+
+

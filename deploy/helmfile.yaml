@@ -61,8 +61,7 @@ releases:
                   <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
                   <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
                 </body>                
-                </html>               
-
+                </html>
           config:
             enabled: true
             mountPath: /etc/nginx/conf.d
@@ -90,6 +89,7 @@ releases:
             default:
               external: 80
               internal: 80
+
         ingress:
           default:
             enabled: true
@@ -104,5 +104,6 @@ releases:
               alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
               alb.ingress.kubernetes.io/ssl-redirect: "443"
               alb.ingress.kubernetes.io/target-type: ip
-            hosts:
+              outputs.platform.cloudposse.com/entrypoint: https://example-workflow.{{ .Values.platform.default_ingress_domain }}
+             hosts:
               "example-workflow.{{ .Values.platform.default_ingress_domain }}": /
