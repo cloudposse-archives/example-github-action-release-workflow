@@ -1,0 +1,103 @@
+repositories:
+  # Cloud Posse incubator repo of helm charts
+  - name: "cloudposse-incubator"
+    url: "https://charts.cloudposse.com/incubator/"
+
+environments:
+  preview:
+  staging:
+  production:
+  dev:
+
+# the helm releases that this helmfile manages
+releases:
+  #
+  # References:
+  #   - https://github.com/cloudposse/charts/blob/master/incubator/monochart
+  #
+
+  # name must be unique on the namespace
+  - name: "devops-ghactions"
+    chart: "cloudposse-incubator/monochart"
+    version: "0.23.1"
+    createNamespace: true
+    wait: true
+    atomic: true
+    # the section where we pass in what the target helm chart expects in it's values.yaml
+    # explanation in this section will be specific to monochart
+    #
+    # Reference: https://github.com/cloudposse/charts/blob/master/incubator/monochart/values.yaml
+    #
+    values:
+      - image:
+          repository: {{ requiredEnv "IMAGE_NAME" }}
+          tag: {{ requiredEnv "IMAGE_TAG" }}
+        replicaCount: 1
+        deployment:
+          enabled: true
+
+        configMaps:
+          default:
+            enabled: true
+            mountPath: /usr/share/nginx/html
+            files:
+              "index.html": |-
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+                  <title>Simple static website with NGINX</title>
+                  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+                  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+                </head>
+                <body>
+                  <noscript>You need to enable JavaScript to run this app.</noscript>
+                  Hello world! <br/>
+                  We are in {{ .Values.platform.region }} region.                
+                  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+                </body>                
+                </html>               
+
+          config:
+            enabled: true
+            mountPath: /etc/nginx/conf.d
+            files:
+              "default.conf": |-
+                server {
+                    listen       80 default_server;
+                    listen  [::]:80;
+                    server_name  _;
+                
+                    location / {
+                        root   /usr/share/nginx/html;
+                        index  index.html index.htm;
+                    }
+                
+                    error_page   500 502 503 504  /50x.html;
+                    location = /50x.html {
+                        root   /usr/share/nginx/html;
+                    }
+                }
+
+        service:
+          enabled: true
+          ports:
+            default:
+              external: 80
+              internal: 80
+        ingress:
+          default:
+            enabled: false
+            port: default
+            annotations:
+              external-dns.alpha.kubernetes.io/target: {{ .Values.platform.multiregion_ingress_domain }}
+              kubernetes.io/ingress.class: nginx
+              kubernetes.io/tls-acme: "true"
+              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+            hosts:
+              "devops-ghactions.{{ .Values.platform.multiregion_domain }}": /
+            tls:
+            - secretName: devops-ghactions-tls
+              hosts:
+              - devops-ghactions.{{ .Values.platform.multiregion_domain }}

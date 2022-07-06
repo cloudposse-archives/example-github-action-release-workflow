@@ -66,5 +66,21 @@ runs:
 
   - shell: sh
     run: |
-      sleep $((RANDOM % 10)) && \
-      echo "${{ inputs.operation }} ${{ inputs.image }}:${{ inputs.image-tag }} to '${{ inputs.stack }}' stack with '${{ inputs.environment }}' settings in '${{ inputs.namespace }}' namespace"
+      # Helm Deployment
+      OPERATION_COMMAND="helmfile --namespace ${NAMESPACE} --environment ${ENVIRONMENT} --file /${HELMFILE_DIR}/${HELMFILE} ${OPERATION}"
+      echo "Executing: ${OPERATION_COMMAND}"
+      ${OPERATION_COMMAND}
+
+#      RELEASES_COUNTS=$(helm --namespace ${NAMESPACE} list --output json | jq 'length')
+#
+#      if [[ "${RELEASES_COUNTS}" == "0" ]]; then
+#      kubectl delete ns ${NAMESPACE}
+#      fi
+    env:
+      NAMESPACE: ${{ inputs.namespace }}
+      ENVIRONMENT: ${{ inputs.environment }}
+      IMAGE_NAME: ${{ inputs.image }}
+      IMAGE_TAG: ${{ inputs.image-tag }}
+      OPERATION: ${{ inputs.operation }}
+      HELMFILE_DIR: ${{ inputs.helmfile-path }}
+      HELMFILE: ${{ inputs.helmfile }}
