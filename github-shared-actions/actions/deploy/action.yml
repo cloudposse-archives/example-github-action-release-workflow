@@ -40,6 +40,20 @@ outputs:
 runs:
   using: "composite"
   steps:
+  - name: Setup helmfile
+    uses: mamezou-tech/setup-helmfile@v1.0.0
+    with:
+      helmfile-version: "v0.145.0"
+      helm-version: "v3.7.2"
+      kubectl-version: 1.22.9
+      kubectl-release-date: 2022-06-03
+      install-kubectl: yes
+      install-helm: yes
+      install-helm-plugins: yes
+      helm-diff-plugin-version: master
+      helm-s3-plugin-version: master
+      additional-helm-plugins: ""
+
   - name: Configure AWS Credentials
     uses: aws-actions/configure-aws-credentials@v1
     with:
@@ -62,24 +76,11 @@ runs:
   - name: S3 Sync
     uses: giboow/action-aws-cli@v1
     with:
-      args: eks --region ${{ inputs.aws-region }} update-kubeconfig --name cplive-plat-ue2-dev-eks-blue-cluster
-
-  - name: Setup helmfile
-    uses: mamezou-tech/setup-helmfile@v1.0.0
-    with:
-      helmfile-version: "v0.145.0"
-      helm-version: "v3.7.2"
-      kubectl-version: 1.22.9
-      kubectl-release-date: 2022-06-03
-      install-kubectl: yes
-      install-helm: yes
-      install-helm-plugins: yes
-      helm-diff-plugin-version: master
-      helm-s3-plugin-version: master
-      additional-helm-plugins: ""
+      args: eks --region ${{ inputs.aws-region }} update-kubeconfig --name cplive-plat-ue2-dev-eks-blue-cluster --kubeconfig ./.kube/config
 
   - shell: sh
-    run: | 
+    run: |
+      pwd
       kubectl get ns
       # Helm Deployment
       if [[ "${{ inputs.operation }}" == "deploy" ]]; then 
@@ -97,7 +98,7 @@ runs:
 #      kubectl delete ns ${NAMESPACE}
 #      fi
     env:
-      KUBECONFIG: /github/home/.kube/config
+      KUBECONFIG: ./.kube/config
       NAMESPACE: ${{ inputs.namespace }}
       ENVIRONMENT: ${{ inputs.environment }}
       IMAGE_NAME: ${{ inputs.image }}
