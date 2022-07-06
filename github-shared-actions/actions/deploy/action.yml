@@ -51,13 +51,18 @@ runs:
     uses: aws-actions/configure-aws-credentials@v1
     with:
       aws-region: ${{ inputs.aws-region }}
-      role-to-assume: arn:aws:iam::555042905974:role/cplive-core-gbl-dev-cicd
+      role-to-assume: arn:aws:iam::068007702576:role/cplive-core-gbl-dev-helm
       role-skip-session-tagging: true
+      aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
+      role-duration-seconds: 3000
+      role-session-name: GHA-chain
 
   - name: S3 Sync
     uses: giboow/action-aws-cli@v1
     with:
-      args: eks --region ${{ inputs.aws-region }} update-kubeconfig --name cplive-plat-ue2-dev-eks-blue-cluster --role-arn arn:aws:iam::555042905974:role/cplive-core-gbl-identity-cicd
+      args: eks --region ${{ inputs.aws-region }} update-kubeconfig --name cplive-plat-ue2-dev-eks-blue-cluster
 
   - shell: sh
     run: |
