@@ -81,11 +81,11 @@ runs:
   - shell: sh
     run: |
       # Helm Deployment
-      if [[ "${{ inputs.operation }}" == "deploy" ]]; 
+      if [[ "${{ inputs.operation }}" == "deploy" ]]; then 
         OPERATION="apply"
-      elseif [[ "${{ inputs.operation }}" == "destroy" ]];
+      elif [[ "${{ inputs.operation }}" == "destroy" ]]; then
         OPERATION="destroy"
-      fi;
+      fi
       OPERATION_COMMAND="helmfile --namespace ${NAMESPACE} --environment ${ENVIRONMENT} --file /${HELMFILE_DIR}/${HELMFILE} ${OPERATION}"
       echo "Executing: ${OPERATION_COMMAND}"
       ${OPERATION_COMMAND}
