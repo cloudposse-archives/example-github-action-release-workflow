@@ -81,6 +81,11 @@ runs:
   - shell: sh
     run: |
       # Helm Deployment
+      if [[ "${{ inputs.operation }}" == "deploy" ]]; 
+        OPERATION="apply"
+      elseif [[ "${{ inputs.operation }}" == "destroy" ]];
+        OPERATION="destroy"
+      fi;
       OPERATION_COMMAND="helmfile --namespace ${NAMESPACE} --environment ${ENVIRONMENT} --file /${HELMFILE_DIR}/${HELMFILE} ${OPERATION}"
       echo "Executing: ${OPERATION_COMMAND}"
       ${OPERATION_COMMAND}
@@ -95,6 +100,5 @@ runs:
       ENVIRONMENT: ${{ inputs.environment }}
       IMAGE_NAME: ${{ inputs.image }}
       IMAGE_TAG: ${{ inputs.image-tag }}
-      OPERATION: ${{ inputs.operation }}
       HELMFILE_DIR: ${{ inputs.helmfile-path }}
       HELMFILE: ${{ inputs.helmfile }}
