@@ -80,6 +80,7 @@ runs:
 
   - shell: sh
     run: |
+      ls -la ./
       kubectl get ns
       # Helm Deployment
       if [[ "${{ inputs.operation }}" == "deploy" ]]; then 
