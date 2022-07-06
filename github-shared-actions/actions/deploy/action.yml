@@ -64,6 +64,20 @@ runs:
     with:
       args: eks --region ${{ inputs.aws-region }} update-kubeconfig --name cplive-plat-ue2-dev-eks-blue-cluster
 
+  - name: Setup helmfile
+    uses: actions/checkout@v1.0.0
+    with:
+      helmfile-version: "v0.145.0"
+      helm-version: "v3.7.2"
+      kubectl-version: 1.22.9
+      kubectl-release-date: 2022-06-03
+      install-kubectl: false
+      install-helm: yes
+      install-helm-plugins: yes
+      helm-diff-plugin-version: master
+      helm-s3-plugin-version: master
+      additional-helm-plugins: ""
+
   - shell: sh
     run: |
       # Helm Deployment
