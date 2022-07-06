@@ -57,7 +57,7 @@ source /etc/profile.d/aws.sh
 assume-role default aws eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME}
 
 # Read platform specific configs/info
-# assume-role default chamber export platform/${CLUSTER_NAME} --format yaml | yq --exit-status --no-colors  eval '{"platform": .}' - > /tmp/platform.yaml
+assume-role default chamber export platform/${CLUSTER_NAME}/${ENVIRONMENT} --format yaml | yq --exit-status --no-colors  eval '{"platform": .}' - > /tmp/platform.yaml
 
 if [[ "${OPERATION}" == "deploy" ]]; then
 	OPERATION="apply"

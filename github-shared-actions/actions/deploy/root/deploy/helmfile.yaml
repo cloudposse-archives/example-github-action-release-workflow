@@ -2,8 +2,13 @@ environments:
   preview:
   staging:
   production:
+  dev:
+  qa1:
+  qa2:
+  qa3:
+  qa4:
 
 helmfiles:
   - path: {{ requiredEnv "APPLICATION_HELMFILE" }}
-#    values:
-#      - /tmp/platform.yaml
+    values:
+      - /tmp/platform.yaml

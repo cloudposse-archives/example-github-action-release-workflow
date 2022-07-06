@@ -8,6 +8,10 @@ environments:
   staging:
   production:
   dev:
+  qa1:
+  qa2:
+  qa3:
+  qa4:
 
 # the helm releases that this helmfile manages
 releases:
@@ -53,7 +57,7 @@ releases:
                 <body>
                   <noscript>You need to enable JavaScript to run this app.</noscript>
                   Hello world! <br/>
-                  We are in .Values.platform.region region.                
+                  We are in {{ .Values.platform.region }} region.                
                   <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
                   <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
                 </body>                
@@ -88,16 +92,17 @@ releases:
               internal: 80
         ingress:
           default:
-            enabled: false
+            enabled: true
             port: default
             annotations:
-              external-dns.alpha.kubernetes.io/target: .Values.platform.multiregion_ingress_domain
-              kubernetes.io/ingress.class: nginx
-              kubernetes.io/tls-acme: "true"
-              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+              external-dns.alpha.kubernetes.io/target: ${{ .Values.platform.default_ingress_domain }}
+              alb.ingress.kubernetes.io/group.name: ${{ .Values.platform.default_alb_ingress_group }}
+              external-dns.alpha.kubernetes.io/hostname: example-workflow.${{ .Values.platform.default_ingress_domain }}
+              kubernetes.io/ingress.class: alb
+              alb.ingress.kubernetes.io/scheme: internet-facing
+              alb.ingress.kubernetes.io/actions.ssl-redirect: '{"RedirectConfig":{"Port":"443","Protocol":"HTTPS","StatusCode":"HTTP_301"},"Type":"redirect"}'
+              alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+              alb.ingress.kubernetes.io/ssl-redirect: "443"
+              alb.ingress.kubernetes.io/target-type: ip
             hosts:
-              "devops-ghactions. .Values.platform.multiregion_domain": /
-            tls:
-            - secretName: devops-ghactions-tls
-              hosts:
-              - devops-ghactions. .Values.platform.multiregion_domain
+              "example-workflow.${{ .Values.platform.default_ingress_domain }}": /
