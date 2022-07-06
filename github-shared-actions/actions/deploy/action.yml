@@ -79,8 +79,7 @@ runs:
       additional-helm-plugins: ""
 
   - shell: sh
-    run: |
-      export 
+    run: | 
       kubectl get ns
       # Helm Deployment
       if [[ "${{ inputs.operation }}" == "deploy" ]]; then 
@@ -98,6 +97,7 @@ runs:
 #      kubectl delete ns ${NAMESPACE}
 #      fi
     env:
+      KUBECONFIG: /github/home/.kube/config
       NAMESPACE: ${{ inputs.namespace }}
       ENVIRONMENT: ${{ inputs.environment }}
       IMAGE_NAME: ${{ inputs.image }}
