@@ -98,7 +98,7 @@ runs:
 #      kubectl delete ns ${NAMESPACE}
 #      fi
     env:
-      KUBECONFIG: /github/workspace/.kube/config
+      KUBECONFIG: ./.kube/config
       NAMESPACE: ${{ inputs.namespace }}
       ENVIRONMENT: ${{ inputs.environment }}
       IMAGE_NAME: ${{ inputs.image }}
