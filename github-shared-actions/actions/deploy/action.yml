@@ -80,7 +80,6 @@ runs:
 
   - shell: sh
     run: |
-      pwd
       kubectl get ns
       # Helm Deployment
       if [[ "${{ inputs.operation }}" == "deploy" ]]; then 
@@ -98,7 +97,7 @@ runs:
 #      kubectl delete ns ${NAMESPACE}
 #      fi
     env:
-      KUBECONFIG: ./.kube/config
+      KUBECONFIG: /github/workspace/.kube/config
       NAMESPACE: ${{ inputs.namespace }}
       ENVIRONMENT: ${{ inputs.environment }}
       IMAGE_NAME: ${{ inputs.image }}
