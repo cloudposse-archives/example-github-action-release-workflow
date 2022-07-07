@@ -8,7 +8,10 @@ permissions:
   pull-requests: write
   deployments: write
 
-concurrency: ${{ github.ref }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 
 jobs:
   default:
