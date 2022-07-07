@@ -3,11 +3,13 @@ on:
   push:
     branches: [ 'release/**' ]
 
-permissions: {}
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   default:
-    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-hotfix.yml@main
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-hotfix.yml@release/0.38.0
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"

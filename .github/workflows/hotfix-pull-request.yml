@@ -4,7 +4,9 @@ on:
     branches: [ 'release/**' ]
     types: [opened, synchronize, reopened, closed, labeled, unlabeled]
 
-permissions: {}
+permissions:
+  pull-requests: write
+  deployments: write
 
 jobs:
   default:
