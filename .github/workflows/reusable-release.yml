@@ -68,13 +68,23 @@ jobs:
           token: ${{ secrets.github-private-actions-pat }}
           path: .github/actions
 
+      - name: Environment Info
+        uses: ./.github/actions/environments
+        id: environment
+        with:
+          environment: staging
+          namespace: staging
+
       - name: Deploy
         id: deploy
         uses: ./.github/actions/deploy
         with:
-          stack: staging
-          environment:  staging
-          namespace: staging
+          aws-region: ${{ steps.environment.outputs.region }}
+          base-role: ${{ steps.environment.outputs.role }}
+          cluster: ${{ steps.environment.outputs.cluster }}
+          cluster-role: ${{ steps.environment.outputs.cluster-role }}
+          environment: ${{ steps.environment.outputs.name }}
+          namespace: ${{ steps.environment.outputs.namespace }}
           image: ${{ needs.promote.outputs.image }}
           image-tag: ${{ needs.promote.outputs.tag }}
           operation: deploy
@@ -97,13 +107,23 @@ jobs:
           token: ${{ secrets.github-private-actions-pat }}
           path: .github/actions
 
+      - name: Environment Info
+        uses: ./.github/actions/environments
+        id: environment
+        with:
+          environment: production
+          namespace: production
+
       - name: Deploy
         id: deploy
         uses: ./.github/actions/deploy
         with:
-          stack: production
-          environment:  production
-          namespace: production
+          aws-region: ${{ steps.environment.outputs.region }}
+          base-role: ${{ steps.environment.outputs.role }}
+          cluster: ${{ steps.environment.outputs.cluster }}
+          cluster-role: ${{ steps.environment.outputs.cluster-role }}
+          environment: ${{ steps.environment.outputs.name }}
+          namespace: ${{ steps.environment.outputs.namespace }}
           image: ${{ needs.promote.outputs.image }}
           image-tag: ${{ needs.promote.outputs.tag }}
           operation: deploy
