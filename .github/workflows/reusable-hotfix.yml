@@ -159,7 +159,7 @@ jobs:
       - name: Create reingtegration PR
         uses: devops-infra/action-pull-request@v0.4.2
         with:
-          github_token: ${{ secrets.github-pat }}
+          github_token: ${{ github.token }}
           target_branch: ${{ inputs.default_branch }}
           title: Reintegrate ${{ needs.release.outputs.version }} hotfix into main branch
           template: .github/REINTEGRATE_PULL_REQUEST_TEMPLATE.md
