@@ -92,7 +92,7 @@ jobs:
       tag: ${{ steps.build.outputs.tag }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted"]
     if: ${{ needs.context.outputs.deploy_envs != '[]'  }}
     strategy:
       matrix:
@@ -121,19 +121,30 @@ jobs:
           env: ${{ matrix.env }}
           desc: Environment purged
 
+
+      - name: Environment Info
+        uses: ./.github/actions/environments
+        id: environment
+        with:
+          environment: ${{ matrix.env }}
+          namespace: ${{ matrix.env }}
+
       - name: Deploy
         uses: ./.github/actions/deploy
         id: deploy
         with:
-          stack: ${{ needs.context.outputs.stack }}
-          environment: ${{ matrix.env }}
-          namespace: ${{ matrix.env }}
+          aws-region: ${{ steps.environment.outputs.region }}
+          base-role: ${{ steps.environment.outputs.role }}
+          cluster: ${{ steps.environment.outputs.cluster }}
+          cluster-role: ${{ steps.environment.outputs.cluster-role }}
+          environment: ${{ steps.environment.outputs.name }}
+          namespace: ${{ steps.environment.outputs.namespace }}
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
           operation: deploy
 
   destroy:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted"]
     if: ${{ needs.context.outputs.destroy_envs != '[]'  }}
     strategy:
       matrix:
@@ -160,13 +171,23 @@ jobs:
           ref-to-search: ${{ inputs.ref}}
           status: success
 
+      - name: Environment Info
+        uses: ./.github/actions/environments
+        id: environment
+        with:
+          environment: ${{ matrix.env }}
+          namespace: ${{ matrix.env }}
+
       - name: Destroy
         uses: ./.github/actions/deploy
         id: deploy
         with:
-          stack: ${{ needs.context.outputs.stack }}
-          environment: ${{ matrix.env }}
-          namespace: ${{ matrix.env }}
+          aws-region: ${{ steps.environment.outputs.region }}
+          base-role: ${{ steps.environment.outputs.role }}
+          cluster: ${{ steps.environment.outputs.cluster }}
+          cluster-role: ${{ steps.environment.outputs.cluster-role }}
+          environment: ${{ steps.environment.outputs.name }}
+          namespace: ${{ steps.environment.outputs.namespace }}
           image: "<none>"
           image-tag: "<none>"
           operation: destroy
