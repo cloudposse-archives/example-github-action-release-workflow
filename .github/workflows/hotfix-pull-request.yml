@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   default:
-    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-hotfix-pull-request.yml@goruha-patch-1
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-hotfix-pull-request.yml@main
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"
