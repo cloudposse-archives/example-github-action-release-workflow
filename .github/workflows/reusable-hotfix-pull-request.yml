@@ -26,6 +26,9 @@ on:
     secrets:
       github-private-actions-pat:
         required: true
+
+permissions: {}
+
 jobs:
   context:
     runs-on: ubuntu-latest

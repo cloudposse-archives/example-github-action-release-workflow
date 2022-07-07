@@ -16,6 +16,9 @@ on:
     secrets:
       github-private-actions-pat:
         required: true
+
+permissions: {}
+
 jobs:
   build:
     runs-on: ["self-hosted"]
