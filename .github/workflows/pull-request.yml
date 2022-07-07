@@ -8,21 +8,6 @@ permissions:
   pull-requests: write
   deployments: write
 
-#permissions:
-#  actions: none
-#  checks: none
-#  contents: none
-#  deployments: none
-#  id-token: none
-#  issues: none
-#  discussions: none
-#  packages: none
-#  pages: none
-#  pull-requests: none
-#  repository-projects: none
-#  security-events: none
-#  statuses: none
-
 jobs:
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@real-deploy

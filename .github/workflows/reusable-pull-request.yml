@@ -179,7 +179,6 @@ jobs:
         if: ${{ steps.deployment.outputs.deploymentId != '' }}
         id: deploy
         with:
-          # stack: ${{ needs.context.outputs.stack }}
           aws-region: ${{ steps.environment.outputs.region }}
           base-role: ${{ steps.environment.outputs.role }}
           cluster: ${{ steps.environment.outputs.cluster }}
