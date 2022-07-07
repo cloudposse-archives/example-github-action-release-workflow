@@ -22,6 +22,8 @@ on:
 
 permissions: {}
 
+concurrency: ${{ github.ref }}
+
 jobs:
   promote:
     runs-on: ubuntu-latest

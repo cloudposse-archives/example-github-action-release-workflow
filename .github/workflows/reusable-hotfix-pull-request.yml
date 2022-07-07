@@ -29,6 +29,8 @@ on:
 
 permissions: {}
 
+concurrency: ${{ github.ref }}
+
 jobs:
   context:
     runs-on: ubuntu-latest

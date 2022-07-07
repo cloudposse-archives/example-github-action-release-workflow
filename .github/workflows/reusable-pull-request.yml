@@ -31,6 +31,8 @@ permissions:
   pull-requests: write
   deployments: write
 
+concurrency: ${{ github.ref }}
+
 jobs:
   context:
     runs-on: ubuntu-latest

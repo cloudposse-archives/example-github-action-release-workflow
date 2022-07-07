@@ -26,6 +26,8 @@ on:
 
 permissions: {}
 
+concurrency: ${{ github.ref }}
+
 jobs:
   build:
     runs-on: ["self-hosted"]
