@@ -89,7 +89,7 @@ jobs:
         uses: ./.github/actions/environments
         id: environment
         with:
-          environment: ${{ matrix.env }}
+          environment: dev
           namespace: dev
 
       - name: Deploy
