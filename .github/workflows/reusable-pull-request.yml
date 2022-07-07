@@ -84,11 +84,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+# stack: ${{ needs.context.outputs.stack }}
+
       - name: Deploy
         uses: ./github-shared-actions/actions/deploy
         id: deploy
         with:
-          stack: ${{ needs.context.outputs.stack }}
+          aws-region: us-east-2
+          base-role: arn:aws:iam::555042905974:role/cplive-core-gbl-identity-cicd
+          cluster: cplive-plat-ue2-dev-eks-blue-cluster
+          cluster-role: arn:aws:iam::068007702576:role/cplive-plat-gbl-dev-helm
           environment: ${{ matrix.env }}
           namespace: ${{ needs.context.outputs.namespace }}
           image: ${{ needs.build.outputs.image }}
@@ -120,7 +125,11 @@ jobs:
         if: ${{ steps.deployment.outputs.deploymentId != '' }}
         id: deploy
         with:
-          stack: ${{ needs.context.outputs.stack }}
+          # stack: ${{ needs.context.outputs.stack }}
+          aws-region: us-east-2
+          base-role: arn:aws:iam::555042905974:role/cplive-core-gbl-identity-cicd
+          cluster: cplive-plat-ue2-dev-eks-blue-cluster
+          cluster-role: arn:aws:iam::068007702576:role/cplive-plat-gbl-dev-helm
           environment:  ${{ matrix.env }}
           namespace: ${{ needs.context.outputs.namespace }}
           image: "<none>"

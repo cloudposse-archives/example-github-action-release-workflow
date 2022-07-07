@@ -1,13 +1,19 @@
 name: 'Deploy helmfile EKS'
 description: 'Deploy on EKS with helmfile'
 inputs:
-  stack:
-    description: Stack name
+  cluster:
+    description: Cluster name
     required: true
   aws-region:
     description: AWS region
     required: false
-    default: us-east-2
+    default: us-east-1
+  base-role:
+    description: Base role arn
+    required: true
+  cluster-role:
+    description: Cluster role arn
+    required: true
   helmfile-path:
     description: The path where lives the helmfile.
     required: false
@@ -40,7 +46,6 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   env:
-    STACK: ${{ inputs.stack }}
     AWS_REGION: ${{ inputs.aws-region }}
     ENVIRONMENT: ${{ inputs.environment }}
     HELMFILE: ${{ inputs.helmfile }}
@@ -49,3 +54,6 @@ runs:
     IMAGE_NAME: ${{ inputs.image }}
     IMAGE_TAG: ${{ inputs.image-tag }}
     OPERATION: ${{ inputs.operation }}
+    BASE_ROLE: ${{ inputs.base-role }}
+    CLUSTER_NAME:  ${{ inputs.cluster }}
+    CLUSTER_ROLE:  ${{ inputs.cluster-role }}
