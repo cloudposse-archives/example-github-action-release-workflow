@@ -4,6 +4,12 @@ repositories:
     url: "https://charts.cloudposse.com/incubator/"
 
 environments:
+  default:
+    values:
+      - platform:
+          region: us-east-2
+          default_ingress_domain: example.com
+          default_alb_ingress_group: default
   preview:
   staging:
   production:
@@ -105,6 +111,6 @@ releases:
               alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
               alb.ingress.kubernetes.io/ssl-redirect: "443"
               alb.ingress.kubernetes.io/target-type: ip
-              outputs.platform.cloudposse.com/entrypoint: "https://example-workflow.{{ .Values.platform.default_ingress_domain }}"
+              outputs.platform.cloudposse.com/webapp-url: "https://example-workflow.{{ .Values.platform.default_ingress_domain }}"
             hosts:
               "example-workflow.{{ .Values.platform.default_ingress_domain }}": /

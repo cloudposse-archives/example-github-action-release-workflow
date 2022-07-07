@@ -36,7 +36,6 @@ inputs:
 outputs:
   webapp-url:
     description: "Web Application url"
-    value: https://${{ inputs.namespace }}.${{ inputs.environment }}.example.com
 runs:
   using: 'docker'
   image: 'Dockerfile'
