@@ -4,11 +4,13 @@ on:
     branches: [ 'release/**' ]
     types: [opened, synchronize, reopened, closed, labeled, unlabeled]
 
-permissions: {}
+permissions:
+  pull-requests: write
+  deployments: write
 
 jobs:
   default:
-    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-hotfix-pull-request.yml@main
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-hotfix-pull-request.yml@goruha-patch-1
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"
