@@ -28,7 +28,7 @@ on:
         required: true
 
 permissions:
-  issues: write
+  pull-requests: write
 
 jobs:
   context:
@@ -141,7 +141,7 @@ jobs:
       matrix:
         env: ${{ fromJson(needs.context.outputs.destroy_envs) }}
     permissions:
-      issues: write
+      pull-requests: write
     needs: [ context ]
     steps:
       - name: Checkout
