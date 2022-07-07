@@ -32,6 +32,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
+
 jobs:
   build:
     runs-on: ["self-hosted"]
@@ -161,7 +162,7 @@ jobs:
       - name: Create reingtegration PR
         uses: devops-infra/action-pull-request@v0.4.2
         with:
-          github_token: ${{ github.token }}
+          github_token: ${{ secrets.github-pat }}
           target_branch: ${{ inputs.default_branch }}
           title: Reintegrate ${{ needs.release.outputs.version }} hotfix into main branch
           template: .github/REINTEGRATE_PULL_REQUEST_TEMPLATE.md
