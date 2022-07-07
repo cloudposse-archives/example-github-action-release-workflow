@@ -18,6 +18,7 @@ environments:
   qa2:
   qa3:
   qa4:
+  hotfix:
 
 # the helm releases that this helmfile manages
 releases:
