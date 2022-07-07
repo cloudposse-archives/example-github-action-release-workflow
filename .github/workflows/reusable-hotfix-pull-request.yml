@@ -173,6 +173,7 @@ jobs:
 
       - name: Environment Info
         uses: ./.github/actions/environments
+        if: ${{ steps.deployment.outputs.deploymentId != '' }}
         id: environment
         with:
           environment: ${{ matrix.env }}
@@ -180,6 +181,7 @@ jobs:
 
       - name: Destroy
         uses: ./.github/actions/deploy
+        if: ${{ steps.deployment.outputs.deploymentId != '' }}
         id: deploy
         with:
           aws-region: ${{ steps.environment.outputs.region }}
