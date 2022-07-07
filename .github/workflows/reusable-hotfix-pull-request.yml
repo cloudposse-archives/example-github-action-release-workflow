@@ -28,6 +28,7 @@ on:
         required: true
 
 permissions:
+  pull-requests: write
   deployments: write
 
 
@@ -150,6 +151,9 @@ jobs:
   destroy:
     runs-on: ["self-hosted"]
     if: ${{ needs.context.outputs.destroy_envs != '[]'  }}
+    permissions:
+      pull-requests: write
+      deployments: write
     strategy:
       matrix:
         env: ${{ fromJson(needs.context.outputs.destroy_envs) }}

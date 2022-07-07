@@ -77,7 +77,7 @@ jobs:
           namespace: staging
           image: ${{ needs.promote.outputs.image }}
           image-tag: ${{ needs.promote.outputs.tag }}
-          operation: apply
+          operation: deploy
 
   deploy_production:
     runs-on: ["self-hosted"]
@@ -106,4 +106,4 @@ jobs:
           namespace: production
           image: ${{ needs.promote.outputs.image }}
           image-tag: ${{ needs.promote.outputs.tag }}
-          operation: apply
+          operation: deploy
