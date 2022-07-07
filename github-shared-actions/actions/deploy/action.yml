@@ -55,5 +55,5 @@ runs:
     IMAGE_TAG: ${{ inputs.image-tag }}
     OPERATION: ${{ inputs.operation }}
     BASE_ROLE: ${{ inputs.base-role }}
-    CLUSTER_NAME:  ${{ inputs.cluster }}
-    CLUSTER_ROLE:  ${{ inputs.cluster-role }}
+    CLUSTER_NAME: ${{ inputs.cluster }}
+    CLUSTER_ROLE: ${{ inputs.cluster-role }}

@@ -14,7 +14,7 @@ credential_source = Ec2InstanceMetadata
 
 [profile default]
 region = ${AWS_REGION}
-role_arn = ${ROLE_TO_ASSUME}
+role_arn = ${CLUSTER_ROLE}
 source_profile = cicd
 EOT
 
