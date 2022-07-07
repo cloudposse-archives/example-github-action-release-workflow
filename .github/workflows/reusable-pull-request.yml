@@ -23,7 +23,9 @@ on:
       ref:
         required: true
         type: string
-
+    secrets:
+      github-private-actions-pat:
+        required: true
 jobs:
   context:
     runs-on: ubuntu-latest
@@ -36,7 +38,7 @@ jobs:
         with:
           repository: cloudposse/actions-private
           ref: main
-          token: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
+          token: ${{ secrets.github-private-actions-pat }}
           path: .actions
 
       - name: Preview deployments controller
