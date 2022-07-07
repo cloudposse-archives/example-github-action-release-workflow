@@ -104,4 +104,4 @@ jobs:
           namespace: ${{ steps.environment.outputs.namespace }}
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
-          operation: apply
+          operation: deploy
