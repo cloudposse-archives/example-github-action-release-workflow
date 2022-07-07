@@ -23,6 +23,17 @@ on:
       ref:
         required: true
         type: string
+    secrets:
+      github-private-actions-pat:
+        required: true
+
+permissions:
+  pull-requests: write
+  deployments: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   context:
@@ -31,8 +42,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        with:
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
+
       - name: Preview deployments controller
-        uses: ./github-shared-actions/actions/preview_controller
+        uses: ./.github/actions/preview_controller
         id: controller
         with:
           labels: ${{ inputs.labels }}
@@ -45,7 +64,6 @@ jobs:
             qa4: deploy/qa4
 
     outputs:
-      stack: dev
       namespace: ${{ inputs.ref }}
       labels_env: ${{ steps.controller.outputs.labels_env }}
       deploy_envs: ${{ steps.controller.outputs.deploy_envs }}
@@ -58,9 +76,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        with:
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
+
       - name: Build
         id: build
-        uses: ./github-shared-actions/actions/build
+        uses: ./.github/actions/build
         with:
           organization: ${{ inputs.organization }}
           repository: ${{ inputs.repository }}
@@ -71,7 +97,7 @@ jobs:
       tag: ${{ steps.build.outputs.tag }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted"]
     if: ${{ needs.context.outputs.deploy_envs != '[]'  }}
     strategy:
       matrix:
@@ -84,30 +110,59 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Deploy
-        uses: ./github-shared-actions/actions/deploy
-        id: deploy
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
         with:
-          stack: ${{ needs.context.outputs.stack }}
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
+
+      - name: Environment Info
+        uses: ./.github/actions/environments
+        id: environment
+        with:
           environment: ${{ matrix.env }}
           namespace: ${{ needs.context.outputs.namespace }}
+
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        id: deploy
+        with:
+          aws-region: ${{ steps.environment.outputs.region }}
+          base-role: ${{ steps.environment.outputs.role }}
+          cluster: ${{ steps.environment.outputs.cluster }}
+          cluster-role: ${{ steps.environment.outputs.cluster-role }}
+          environment: ${{ steps.environment.outputs.name }}
+          namespace: ${{ steps.environment.outputs.namespace }}
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
           operation: deploy
 
   destroy:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted"]
     if: ${{ needs.context.outputs.destroy_envs != '[]'  }}
     strategy:
       matrix:
         env: ${{ fromJson(needs.context.outputs.destroy_envs) }}
+    permissions:
+      pull-requests: write
+      deployments: write
     needs: [ context ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        with:
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
+
       - name: Seek deployment
-        uses: ./github-shared-actions/actions/get_deployment
+        uses: ./.github/actions/get_deployment
         id: deployment
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -115,20 +170,31 @@ jobs:
           ref-to-search: ${{ inputs.ref }}
           status: success
 
+      - name: Environment Info
+        uses: ./.github/actions/environments
+        if: ${{ steps.deployment.outputs.deploymentId != '' }}
+        id: environment
+        with:
+          environment: ${{ matrix.env }}
+          namespace: ${{ needs.context.outputs.namespace }}
+
       - name: Destroy
-        uses: ./github-shared-actions/actions/deploy
+        uses: ./.github/actions/deploy
         if: ${{ steps.deployment.outputs.deploymentId != '' }}
         id: deploy
         with:
-          stack: ${{ needs.context.outputs.stack }}
-          environment:  ${{ matrix.env }}
-          namespace: ${{ needs.context.outputs.namespace }}
+          aws-region: ${{ steps.environment.outputs.region }}
+          base-role: ${{ steps.environment.outputs.role }}
+          cluster: ${{ steps.environment.outputs.cluster }}
+          cluster-role: ${{ steps.environment.outputs.cluster-role }}
+          environment: ${{ steps.environment.outputs.name }}
+          namespace: ${{ steps.environment.outputs.namespace }}
           image: "<none>"
           image-tag: "<none>"
           operation: destroy
 
       - name: Cleanup label
-        uses: ./github-shared-actions/actions/preview_controller_label_cleanup
+        uses: ./.github/actions/preview_controller_label_cleanup
         if: ${{ ! inputs.open }}
         with:
           labels_env: ${{ needs.context.outputs.labels_env }}

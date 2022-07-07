@@ -16,6 +16,17 @@ on:
       version:
         required: true
         type: string
+    secrets:
+      github-private-actions-pat:
+        required: true
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+
 jobs:
   promote:
     runs-on: ubuntu-latest
@@ -52,9 +63,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        with:
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
+
       - name: Deploy
         id: deploy
-        uses: ./github-shared-actions/actions/deploy
+        uses: ./.github/actions/deploy
         with:
           stack: staging
           environment:  staging
@@ -73,9 +92,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        with:
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
+
       - name: Deploy
         id: deploy
-        uses: ./github-shared-actions/actions/deploy
+        uses: ./.github/actions/deploy
         with:
           stack: production
           environment:  production

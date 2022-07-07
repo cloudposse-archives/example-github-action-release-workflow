@@ -3,6 +3,8 @@ on:
   push:
     branches: [ main ]
 
+permissions: {}
+
 jobs:
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-main.yml@main
@@ -10,3 +12,5 @@ jobs:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"
       registry: 252494810635.dkr.ecr.us-east-2.amazonaws.com
+    secrets:
+      github-private-actions-pat: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"

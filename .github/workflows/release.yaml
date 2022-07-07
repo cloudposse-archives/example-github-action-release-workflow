@@ -3,6 +3,12 @@ on:
   release:
     types: [published]
 
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-release.yml@main
@@ -11,3 +17,5 @@ jobs:
       repository: "${{ github.event.repository.name }}"
       registry: 252494810635.dkr.ecr.us-east-2.amazonaws.com
       version: ${{ github.event.release.tag_name }}
+    secrets:
+      github-private-actions-pat: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"

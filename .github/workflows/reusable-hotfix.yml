@@ -19,8 +19,17 @@ on:
         type: string
         default: main
     secrets:
+      github-private-actions-pat:
+        required: true
       github-pat:
         required: true
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 
 jobs:
   build:
@@ -28,6 +37,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        with:
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
 
       - name: Build
         id: build
@@ -103,11 +120,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        with:
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
+
       - name: Deploy
         id: deploy
-        uses: ./github-shared-actions/actions/deploy
+        uses: ./.github/actions/deploy
         with:
-          stack: production
+          # stack: production
           environment:  production
           namespace: production
           image: ${{ needs.promote.outputs.image }}

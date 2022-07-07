@@ -3,6 +3,8 @@ on:
   push:
     branches: [ 'release/**' ]
 
+permissions: {}
+
 jobs:
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-hotfix.yml@main
@@ -13,3 +15,4 @@ jobs:
       default_branch: main
     secrets:
       github-pat: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
+      github-private-actions-pat: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"

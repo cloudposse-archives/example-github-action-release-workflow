@@ -4,9 +4,13 @@ on:
     branches: [ 'main' ]
     types: [opened, synchronize, reopened, closed, labeled, unlabeled]
 
+permissions:
+  pull-requests: write
+  deployments: write
+
 jobs:
   default:
-    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@main
+    uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@real-deploy
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"
@@ -14,3 +18,5 @@ jobs:
       open: ${{ github.event.pull_request.state == 'open' }}
       labels: ${{ toJSON(github.event.pull_request.labels.*.name) }}
       ref: ${{ github.event.pull_request.head.ref  }}
+    secrets:
+      github-private-actions-pat: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
