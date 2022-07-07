@@ -32,7 +32,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-
 jobs:
   build:
     runs-on: ["self-hosted"]
@@ -92,6 +91,7 @@ jobs:
           commit: ${{ github.sha }}
           generateReleaseNotes: true
           token: ${{ github.token }}
+          allowUpdates: true
 
     outputs:
       version: ${{ steps.semvers.outputs.patch }}
