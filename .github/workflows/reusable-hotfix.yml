@@ -91,7 +91,6 @@ jobs:
           commit: ${{ github.sha }}
           generateReleaseNotes: true
           token: ${{ github.token }}
-          allowUpdates: true
 
     outputs:
       version: ${{ steps.semvers.outputs.patch }}
