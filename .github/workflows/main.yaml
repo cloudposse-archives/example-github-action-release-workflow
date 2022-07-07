@@ -5,6 +5,8 @@ on:
 
 permissions: {}
 
+concurrency: ${{ github.ref }}
+
 jobs:
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-main.yml@main

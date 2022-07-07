@@ -8,6 +8,8 @@ permissions:
   pull-requests: write
   deployments: write
 
+concurrency: ${{ github.ref }}
+
 jobs:
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@real-deploy
