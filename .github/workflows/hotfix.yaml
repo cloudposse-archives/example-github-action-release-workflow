@@ -5,10 +5,6 @@ on:
 
 permissions: {}
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-hotfix.yml@main
