@@ -85,13 +85,23 @@ jobs:
           token: ${{ secrets.github-private-actions-pat }}
           path: .github/actions
 
+      - name: Environment Info
+        uses: ./.github/actions/environments
+        id: environment
+        with:
+          environment: ${{ matrix.env }}
+          namespace: dev
+
       - name: Deploy
         uses: ./.github/actions/deploy
         id: deploy
         with:
-          stack: dev
-          environment: dev
-          namespace: dev
+          aws-region: ${{ steps.environment.outputs.region }}
+          base-role: ${{ steps.environment.outputs.role }}
+          cluster: ${{ steps.environment.outputs.cluster }}
+          cluster-role: ${{ steps.environment.outputs.cluster-role }}
+          environment: ${{ steps.environment.outputs.name }}
+          namespace: ${{ steps.environment.outputs.namespace }}
           image: ${{ needs.build.outputs.image }}
           image-tag: ${{ needs.build.outputs.tag }}
           operation: apply
