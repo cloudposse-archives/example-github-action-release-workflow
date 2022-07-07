@@ -68,9 +68,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        with:
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
+
       - name: Build
         id: build
-        uses: ./github-shared-actions/actions/build
+        uses: ./.github/actions/build
         with:
           organization: ${{ inputs.organization }}
           repository: ${{ inputs.repository }}
@@ -94,10 +102,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        with:
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
+
 # stack: ${{ needs.context.outputs.stack }}
 
       - name: Deploy
-        uses: ./github-shared-actions/actions/deploy
+        uses: ./.github/actions/deploy
         id: deploy
         with:
           aws-region: us-east-2
@@ -121,8 +137,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        with:
+          repository: cloudposse/actions-private
+          ref: main
+          token: ${{ secrets.github-private-actions-pat }}
+          path: .github/actions
+
       - name: Seek deployment
-        uses: ./github-shared-actions/actions/get_deployment
+        uses: ./.github/actions/get_deployment
         id: deployment
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -131,7 +155,7 @@ jobs:
           status: success
 
       - name: Destroy
-        uses: ./github-shared-actions/actions/deploy
+        uses: ./.github/actions/deploy
         if: ${{ steps.deployment.outputs.deploymentId != '' }}
         id: deploy
         with:
@@ -147,7 +171,7 @@ jobs:
           operation: destroy
 
       - name: Cleanup label
-        uses: ./github-shared-actions/actions/preview_controller_label_cleanup
+        uses: ./.github/actions/preview_controller_label_cleanup
         if: ${{ ! inputs.open }}
         with:
           labels_env: ${{ needs.context.outputs.labels_env }}
