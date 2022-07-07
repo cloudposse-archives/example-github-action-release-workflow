@@ -3,7 +3,8 @@ on:
   push:
     branches: [ main ]
 
-permissions: {}
+permissions:
+  contents: write
 
 jobs:
   default:
