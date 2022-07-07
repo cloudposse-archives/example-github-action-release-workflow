@@ -27,7 +27,9 @@ on:
       github-private-actions-pat:
         required: true
 
-permissions: {}
+permissions:
+  deployments: write
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -93,6 +95,8 @@ jobs:
 
   deploy:
     runs-on: ["self-hosted"]
+    permissions:
+      deployments: write
     if: ${{ needs.context.outputs.deploy_envs != '[]'  }}
     strategy:
       matrix:
