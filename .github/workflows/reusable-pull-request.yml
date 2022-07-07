@@ -39,10 +39,10 @@ jobs:
           repository: cloudposse/actions-private
           ref: main
           token: ${{ secrets.github-private-actions-pat }}
-          path: .actions
+          path: .github/actions
 
       - name: Preview deployments controller
-        uses: ./.actions/preview_controller
+        uses: ./.github/actions/preview_controller
         id: controller
         with:
           labels: ${{ inputs.labels }}
