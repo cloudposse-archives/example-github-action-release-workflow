@@ -3,7 +3,8 @@ on:
   release:
     types: [published]
 
-permissions: {}
+permissions:
+  contents: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
