@@ -31,8 +31,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout Private actions
+        uses: actions/checkout@v3
+        repository: cloudposse/actions-private
+        ref: main
+        token: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
+        path: .actions
+
       - name: Preview deployments controller
-        uses: ./github-shared-actions/actions/preview_controller
+        uses: ./.actions/preview_controller
         id: controller
         with:
           labels: ${{ inputs.labels }}
