@@ -13,3 +13,4 @@ jobs:
       default_branch: main
     secrets:
       github-pat: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
+      github-private-actions-pat: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
