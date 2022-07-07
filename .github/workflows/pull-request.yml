@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   test:
-  - id: check
+  - name: check
     uses: prince-chrismc/check-actor-permissions-action@v2
     with:
       github_token: ${{ github.token }}
