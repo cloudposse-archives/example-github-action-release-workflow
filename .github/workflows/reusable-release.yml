@@ -38,13 +38,13 @@ jobs:
           from: tags/${{ inputs.version }}
 
       - name: Promote Docker image
-      - uses: EuphoricSystems/docker-promote-image@1.0.0
+        uses: EuphoricSystems/docker-promote-image@1.0.0
         with:
           src: ${{ inputs.registry }}/${{ inputs.organization }}/${{ inputs.repository }}:sha-${{ github.sha }}
           destinations: ${{ inputs.registry }}/${{ inputs.organization }}/${{ inputs.repository }}:${{ github.event.release.tag_name }}
 
     outputs:
-      image: ${{ inputs.registry }}/${{ inputs.repository }}
+      image: ${{ inputs.registry }}/${{ inputs.organization }}/${{ inputs.repository }}
       tag: ${{ github.event.release.tag_name }}
 
   deploy_staging:
