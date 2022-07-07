@@ -23,14 +23,6 @@ permissions:
 #  statuses: none
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: check
-        uses: prince-chrismc/check-actor-permissions-action@v2
-        with:
-          github_token: ${{ github.token }}
-          permission: write
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-pull-request.yml@real-deploy
     with:

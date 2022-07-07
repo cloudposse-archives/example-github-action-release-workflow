@@ -3,6 +3,8 @@ on:
   release:
     types: [published]
 
+permissions: {}
+
 jobs:
   default:
     uses: cloudposse/example-github-action-release-workflow/.github/workflows/reusable-release.yml@main
