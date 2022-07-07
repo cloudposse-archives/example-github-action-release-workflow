@@ -64,7 +64,7 @@ releases:
                 <body>
                   <noscript>You need to enable JavaScript to run this app.</noscript>
                   Hello world! <br/>
-                  We are in {{ .Values.platform.region }} region.                
+                  We are in {{ .Environment.Name }} environment - {{ .Values.platform.region }} region.                
                   <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
                   <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
                 </body>                
