@@ -6,6 +6,7 @@ on:
 
 permissions:
   pull-requests: write
+  deployments: write
 
 #permissions:
 #  actions: none

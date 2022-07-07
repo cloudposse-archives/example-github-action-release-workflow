@@ -29,6 +29,7 @@ on:
 
 permissions:
   pull-requests: write
+  deployments: write
 
 jobs:
   context:
@@ -142,6 +143,7 @@ jobs:
         env: ${{ fromJson(needs.context.outputs.destroy_envs) }}
     permissions:
       pull-requests: write
+      deployments: write
     needs: [ context ]
     steps:
       - name: Checkout
