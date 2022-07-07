@@ -152,6 +152,8 @@ jobs:
     strategy:
       matrix:
         env: ${{ fromJson(needs.context.outputs.destroy_envs) }}
+    permissions:
+      issues: write
     needs: [ context ]
     steps:
       - name: Checkout
