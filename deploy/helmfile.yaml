@@ -106,5 +106,5 @@ releases:
               alb.ingress.kubernetes.io/ssl-redirect: "443"
               alb.ingress.kubernetes.io/target-type: ip
               outputs.platform.cloudposse.com/entrypoint: "https://example-workflow.{{ .Values.platform.default_ingress_domain }}"
-             hosts:
+            hosts:
               "example-workflow.{{ .Values.platform.default_ingress_domain }}": /
