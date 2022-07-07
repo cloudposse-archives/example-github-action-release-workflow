@@ -39,9 +39,6 @@ jobs:
   context:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
       - name: Checkout Private actions
         uses: actions/checkout@v3
         with:
