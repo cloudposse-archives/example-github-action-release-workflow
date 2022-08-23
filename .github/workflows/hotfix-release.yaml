@@ -1,17 +1,20 @@
-name: Bleeding edge
+name: Hotfix release
 on:
   push:
-    branches: [ main ]
+    branches: [ 'release/**' ]
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
-  default:
-    uses: cloudposse/github-actions-workflows/.github/workflows/complex-workflow-bleeding-edge.yml@main
+  perform:
+    uses: cloudposse/github-actions-workflows/.github/workflows/complex-workflow-hotfix-release.yml@main
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"
       registry: 252494810635.dkr.ecr.us-east-2.amazonaws.com
+      default_branch: main
     secrets:
+      github-pat: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
       github-private-actions-pat: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"

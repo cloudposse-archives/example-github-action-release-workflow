@@ -1,4 +1,4 @@
-name: Hotfix - Pull Request
+name: Hotfix branch
 on:
   pull_request:
     branches: [ 'release/**' ]
@@ -9,8 +9,8 @@ permissions:
   deployments: write
 
 jobs:
-  default:
-    uses: cloudposse/github-actions-workflows/.github/workflows/complex-workflow-hotfix-pull-request.yml@main
+  perform:
+    uses: cloudposse/github-actions-workflows/.github/workflows/complex-workflow-hotfix-branch.yml@main
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"
