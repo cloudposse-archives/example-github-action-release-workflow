@@ -30,7 +30,7 @@ releases:
   # name must be unique on the namespace
   - name: "devops-ghactions"
     chart: "cloudposse-incubator/monochart"
-    version: "0.23.1"
+    version: "0.25.0"
     createNamespace: true
     wait: true
     atomic: true
